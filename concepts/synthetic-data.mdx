@@ -24,10 +24,10 @@ None of these are real issuer histories. They are deterministic functions of a s
 Two things are grounded in real-world reference data:
 
 1. **Ticker symbols.** David uses real exchange-style symbol aliases (e.g. `AAPL`, `NVDA`, `SPY`) so your tooling and ticker lists work unchanged. The bundled universe contains **16,143 unique public US symbols** from SEC/Nasdaq snapshots.
-2. **Company reference identity.** Display metadata (name, sector, industry, business description, employee count, market-cap tier, instrument type) is sourced from **yfinance** and cached, so `AAPL` reads as *Apple, Consumer Electronics* and `SPY` reads as *an S&P 500 ETF*.
+2. **Company reference identity.** Display metadata (name, sector, industry, business description, employee count, market-cap tier, instrument type) is sourced from **yfinance** and cached in the `company_reference` table, so `AAPL` reads as *Apple, Consumer Electronics* and `SPY` reads as *an S&P 500 ETF*.
 
 <Warning>
-  Real symbols and real names do **not** mean real data. The prices, fundamentals, news, filings, ownership, and events behind every symbol are synthetic scenario data. A symbol that yfinance has no data for is left `Unclassified` rather than assigned a fabricated sector.
+  Real symbols and real names do **not** mean real data. The prices, fundamentals, news, filings, ownership, and events behind every symbol are synthetic scenario data.
 </Warning>
 
 ## Determinism
