@@ -7,12 +7,7 @@ David is built for financial agents. Its point-in-time guarantees let you step a
 
 ## The core idea
 
-Every artifact in David carries a release date and a `visible_from` timestamp. When you pass `as_of`, David returns only what would have been visible at that point. So a backtest is simply: advance the clock, query with `as_of`, decide, repeat.
-
-<Frame>
-  <img className="block dark:hidden" style={{ width: "100%", height: "auto" }} src="/images/backtest-loop-light.svg" alt="Pick a scenario and set as_of, then loop: query data visible as_of, the agent decides, advance as_of, repeat until end_date." />
-  <img className="hidden dark:block" style={{ width: "100%", height: "auto" }} src="/images/backtest-loop-dark.svg" alt="Pick a scenario and set as_of, then loop: query data visible as_of, the agent decides, advance as_of, repeat until end_date." />
-</Frame>
+Every artifact in David carries a release date and a `visible_from` timestamp. When you pass `as_of`, David returns only what would have been visible at that point. So a backtest is simply: set the clock, query with `as_of`, let the agent decide, advance the clock, and repeat until you reach the scenario's `end_date`.
 
 ## 1. Choose a scenario and horizon
 

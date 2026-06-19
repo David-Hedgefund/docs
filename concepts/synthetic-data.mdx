@@ -36,10 +36,32 @@ David's defining property is determinism. A scenario is built from a seed plus c
 
 Generation also follows a fixed dependency order, so the world is *internally* consistent rather than a pile of independent random series:
 
-<Frame caption="Each layer is derived from the one above it, so the world stays internally consistent.">
-  <img className="mx-auto block dark:hidden" style={{ width: "100%", maxWidth: "440px" }} src="/images/generation-flow-light.svg" alt="Generation pipeline from macro regime down through company identities, statements, estimates, events, prices, artifacts, and a final validation report." />
-  <img className="mx-auto hidden dark:block" style={{ width: "100%", maxWidth: "440px" }} src="/images/generation-flow-dark.svg" alt="Generation pipeline from macro regime down through company identities, statements, estimates, events, prices, artifacts, and a final validation report." />
-</Frame>
+<Steps>
+  <Step title="Macro regime + trading calendar">
+    The economic backdrop and the scenario clock are set first.
+  </Step>
+  <Step title="Company identities + sector archetypes">
+    Each issuer's sector behavior and business profile are established.
+  </Step>
+  <Step title="Financial statements + metrics">
+    Income statement, balance sheet, cash flow, and ratios are generated.
+  </Step>
+  <Step title="Consensus estimates + guidance">
+    Sell-side expectations and management guidance are set against those fundamentals.
+  </Step>
+  <Step title="Event timeline">
+    Earnings, macro catalysts, and idiosyncratic events are scheduled.
+  </Step>
+  <Step title="OHLCV prices">
+    Daily bars are built from market, sector, and event return components.
+  </Step>
+  <Step title="Grounded artifacts">
+    News, filings, and analyst notes are written from the structured records.
+  </Step>
+  <Step title="Validation report">
+    The finished world is checked for consistency and leakage.
+  </Step>
+</Steps>
 
 David first generates the **hidden truth** of the world, then derives fundamentals, expectations, events, prices, and finally the public artifacts from that truth. The hidden state is never exposed through the API; only its downstream, point-in-time observable effects are.
 
