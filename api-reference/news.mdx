@@ -1,0 +1,108 @@
+---
+title: "News & analyst notes"
+description: "Company and market news with sentiment, entities, and event lineage, plus analyst notes."
+---
+
+News articles and analyst notes are *grounded artifacts*: David generates them from the structured records of the scenario, so the numbers in the text match the numbers in the data, and each carries lineage back to the event that produced it. News is point-in-time, only articles visible by date are returned.
+
+## Company & market news
+
+```http
+GET /news
+```
+
+Returns both company news (`news_article`) and market news (`market_news_article`).
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `as_of` | date | - | Point-in-time cutoff, only articles visible on or before this date. |
+| `start_date` / `end_date` | date | - | Inclusive window. |
+| `limit` | integer | 10 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/news?scenario_id=<id>&ticker=AAPL&as_of=2026-03-20" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "news": [
+    {
+      "artifact_id": "news_...",
+      "ticker": "AAPL",
+      "artifact_type": "news_article",
+      "title": "Apple beats on revenue, trims full-year guidance",
+      "source": "Market Wire",
+      "author": "staff",
+      "date": "2026-03-18",
+      "visible_from": "2026-03-18",
+      "url": "https://.../",
+      "summary": "Apple reported revenue above consensus ...",
+      "sentiment": "mixed",
+      "entities": ["AAPL"],
+      "mentioned_tickers": ["AAPL"],
+      "mentioned_metrics": ["revenue", "eps", "guidance"],
+      "source_event_id": "evt_...",
+      "event_lineage": { "...": "..." },
+      "article_format": "earnings_recap"
+    }
+  ]
+}
+```
+
+## News article detail
+
+```http
+GET /news/{artifact_id}
+```
+
+Returns a single article with the full multi-paragraph `text` and validation metadata.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `scenario_id` | string | **Required.** |
+| `artifact_id` | string | The article id (path parameter). |
+
+```bash
+curl -s "https://api.davidhf.com/news/news_abc123?scenario_id=<id>" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "news_article": { "artifact_id": "news_abc123", "text": "Apple today reported ...", "validation": { "...": "..." } } }
+```
+
+Returns `404` if the id is not a news article.
+
+## Analyst notes
+
+```http
+GET /analyst-notes
+```
+
+Full-text sell-side notes (`analyst_note`), including the body text.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `as_of` | date | - | Point-in-time cutoff. |
+| `start_date` / `end_date` | date | - | Inclusive window. |
+| `limit` | integer | 10 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/analyst-notes?scenario_id=<id>&ticker=AAPL&as_of=2026-03-20" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "analyst_notes": [ { "artifact_id": "note_...", "ticker": "AAPL", "title": "Reiterate Overweight", "text": "...", "sentiment": "positive" } ] }
+```
+
+<Info>
+  Every artifact carries a `date` and a `visible_from` timestamp. Passing `as_of` enforces point-in-time visibility so future articles never leak into an agent's information set. See [Date semantics](/concepts/date-semantics).
+</Info>

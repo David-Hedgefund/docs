@@ -1,0 +1,99 @@
+---
+title: "Scenarios"
+description: "The self-contained synthetic market world behind every David response."
+---
+
+A **scenario** is the core abstraction in David. It is a complete, self-contained synthetic market world: a fixed set of companies, their full price history, fundamentals, earnings, filings, news, ownership, and a macro tape, all generated together so they stay internally consistent.
+
+Every data endpoint requires a `scenario_id`. You never query "the market" in the abstract; you query a specific world.
+
+```bash
+curl -s "https://api.davidhf.com/prices?scenario_id=<scenario_id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Why scenarios
+
+Scoping data to a scenario gives you properties real history can't:
+
+- **Reproducibility.** A scenario is generated deterministically, so it returns the same data on every query, bit for bit.
+- **Isolation.** Train, validate, and test on entirely separate worlds. No overlap, no leakage.
+- **Counterfactuals.** Run the same companies through a war shock, a Fed pivot, and an AI mania: three different scenarios, same query code.
+- **Ground truth.** David authored the world, so the hidden state behind every move is known and (for admins) inspectable.
+
+## Anatomy of a scenario
+
+| Field | Description |
+| --- | --- |
+| `id` | Stable UUID derived from the seed and configuration. |
+| `status` | `ready` once generated. |
+| `scenario_type` | Generation type (`earnings_week`). |
+| `seed` | The integer seed. Same seed + config ⇒ same world. |
+| `name` / `description` | Human-readable label and summary. |
+| `start_date` / `end_date` | The scenario-clock window the data spans. |
+| `current_date` | The "as-of now" point on the scenario clock. |
+| `generator_version` / `calibration_version` | Versions used to build the world. |
+| `public_summary` | Theme, macro regime, market mechanics, agent task, tickers, and date semantics. |
+
+The `public_summary` is where the world's *story* lives: the macro regime, the catalyst, what moves and why, and the analytical task the scenario is designed to pose to an agent.
+
+## Path mode: history vs. future
+
+Each scenario is either a **historical-context replay** or a **future branch**:
+
+<CardGroup cols={2}>
+  <Card title="historical_context" icon="clock-rotate-left">
+    Scenario-clock dates are anchored to a plausible historical analog era for the theme. Useful for training on "what if this era had played out differently."
+  </Card>
+  <Card title="future_branch" icon="arrow-trend-up">
+    Dates start on or after the forecast as-of date and project forward. Useful for forecasting and forward-looking evaluation.
+  </Card>
+</CardGroup>
+
+In both cases the dates are **synthetic scenario-clock labels**, not real issuer histories. They exist for point-in-time filtering, as-of visibility, leakage control, and replay. See [Date semantics](/concepts/date-semantics).
+
+## Dataset splits
+
+Scenarios carry a `dataset_split` (`train`, `validation`, `test`, or `holdout`), so you can build clean ML pipelines where the worlds themselves, not just the rows, are partitioned.
+
+## Themes
+
+Every scenario is anchored to a **theme** with a macro regime, sector mix, event template, and an explicit agent task. The bundled library spans 40+ themes including:
+
+- War / energy shocks and shipping-lane escalation
+- Contested elections and policy volatility
+- AI platform IPO mania
+- Regional-bank credit crunch, CRE refinancing wall
+- Oil embargo, China slowdown, semiconductor export controls
+- Systemic bank runs, global financial crisis credit freezes, housing-bubble collapses
+- Flash crashes, dot-com profitability resets, Fed pivots
+
+List them via [`GET /metadata/scenario-themes`](/api-reference/metadata#scenario-themes).
+
+## The bundled library
+
+David ships with a ready-to-query library of **720 scenarios**, each addressing up to **16,143 real ticker aliases**, with mixed historical/future branches, mixed horizons (30-year panels, business-cycle panels, annual event studies, focused event windows), and 4 dataset splits. You can start querying immediately, no generation required.
+
+## Who builds scenarios
+
+Scenarios are generated and curated by **David**, not by API consumers. Every world is pre-built, validated, and immutable, which keeps results reproducible across teams and runs. You [browse the library](/api-reference/scenarios#list-scenarios), pick a `scenario_id`, and query its data.
+
+If you need a world with characteristics the library doesn't cover (a specific theme, sector mix, or horizon), reach out at [investors@davidhf.com](mailto:investors@davidhf.com) and we'll generate it for you.
+
+## Quality and validation
+
+Every scenario carries machine-checkable guarantees:
+
+- **Validation report** ([`/scenarios/{id}/validation`](/api-reference/scenarios#validation-report)) covers accounting identities, OHLC invariants, event price reactions, and artifact-leakage checks.
+- **Dataset-quality report** ([`/scenarios/{id}/dataset-quality`](/api-reference/scenarios#dataset-quality)) covers per-ticker richness and lineage: earnings cadence, filing items, event-price linkage, news density, holdings, and instrument-suppression rules.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Synthetic data & provenance" icon="flask" href="/concepts/synthetic-data">
+    What's real, what's generated, and how determinism works.
+  </Card>
+  <Card title="Scenarios API" icon="code" href="/api-reference/scenarios">
+    List, inspect, and validate scenarios.
+  </Card>
+</CardGroup>

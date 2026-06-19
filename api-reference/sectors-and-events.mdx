@@ -1,0 +1,80 @@
+---
+title: "Sectors & events"
+description: "Sector metadata and the scenario event timeline."
+---
+
+These endpoints describe the structure of the scenario: its sector definitions and the public event timeline that drives prices, news, and filings.
+
+## Sectors
+
+```http
+GET /metadata/sectors
+```
+
+Sector metadata for the scenario: descriptions, regime, and factor exposures.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `scenario_id` | string | **Required.** |
+
+```bash
+curl -s "https://api.davidhf.com/metadata/sectors?scenario_id=<id>" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "sectors": [
+    {
+      "sector": "Technology",
+      "industry": "Software",
+      "description": "...",
+      "regime": "inflation_shock",
+      "factors": { "rate_sensitivity": -0.4, "...": "..." }
+    }
+  ]
+}
+```
+
+## Event timeline
+
+```http
+GET /events/timeline
+```
+
+The public event sequence for the scenario, earnings, macro catalysts, and idiosyncratic events. Events carry a `visible_from` so an `as_of` query returns only what was known at the time. Hidden effects are never exposed publicly.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `as_of` | date | - | Point-in-time cutoff. |
+| `event_type` | string | all | Filter by event type. |
+| `start_date` / `end_date` | date | - | Inclusive window. |
+| `limit` | integer | 100 | Page size (max 500). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/events/timeline?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "events": [
+    {
+      "event_id": "evt_...",
+      "ticker": "AAPL",
+      "event_type": "earnings_release",
+      "event_date": "2026-03-18",
+      "public_release_datetime": "2026-03-18T16:30:00",
+      "visible_from": "2026-03-18",
+      "public_summary": "Q1 earnings: revenue beat, EPS miss, guidance cut."
+    }
+  ]
+}
+```
+
+<Info>
+  Events are the spine of a scenario. News, filings, analyst revisions, and price reactions all link back to an event via `source_event_id`, so you can trace any artifact to its cause.
+</Info>

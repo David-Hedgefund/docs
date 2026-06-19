@@ -1,0 +1,63 @@
+---
+title: "Analyst estimates"
+description: "Sell-side consensus estimates, ratings, and price-target revisions."
+---
+
+Analyst estimates capture the sell-side view: per-firm estimates, ratings, price targets, and revisions over time. Estimates are point-in-time, use `as_of` to see the consensus an agent would have had on a given date.
+
+## Analyst estimates
+
+```http
+GET /analyst-estimates
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | - | **Required.** |
+| `as_of` | date | latest | Return only estimates visible on or before this date. |
+| `limit` | integer | 50 | Page size (max 200). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/analyst-estimates?scenario_id=<id>&ticker=AAPL&as_of=2026-03-27" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "analyst_estimates": [
+    {
+      "id": "est_...",
+      "ticker": "AAPL",
+      "firm": "Morgan Stanley",
+      "analyst": "J. Rivera",
+      "estimate_date": "2026-03-12",
+      "fiscal_period": "Q2 2026",
+      "metric_name": "eps",
+      "estimate": 2.05,
+      "currency": "USD",
+      "rating": "overweight",
+      "target_price": 215.0,
+      "prior_target_price": 205.0,
+      "revision_pct": 0.049,
+      "metadata": { "...": "..." }
+    }
+  ]
+}
+```
+
+<Tip>
+  Estimates carry a `revision_pct` and `prior_target_price`, so you can track the phased revision behavior that follows scenario events like earnings surprises and guidance changes.
+</Tip>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Analyst notes" icon="note-sticky" href="/api-reference/news#analyst-notes">
+    Full-text sell-side notes.
+  </Card>
+  <Card title="Earnings" icon="bullhorn" href="/api-reference/earnings">
+    Consensus vs. actuals and surprises.
+  </Card>
+</CardGroup>

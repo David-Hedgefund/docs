@@ -1,0 +1,99 @@
+---
+title: "Company"
+description: "Company facts, identity, and discovery."
+---
+
+Company facts describe the identity of each issuer in a scenario: name, sector, industry, exchange, CIK, and listing metadata. Identity is grounded in real reference data; everything financial is synthetic. See [Ticker universe](/concepts/ticker-universe).
+
+## Company facts
+
+```http
+GET /company/facts
+```
+
+Returns facts for a single company by `ticker` or `cik`.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `scenario_id` | string | **Required.** |
+| `ticker` | string | Symbol to look up. |
+| `cik` | string | CIK to look up (alternative to `ticker`). |
+
+```bash
+curl -s "https://api.davidhf.com/company/facts?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "company_facts": {
+    "ticker": "AAPL",
+    "name": "Apple Inc.",
+    "cik": "0000320193",
+    "sector": "Technology",
+    "industry": "Consumer Electronics",
+    "category": "Operating Company",
+    "exchange": "NASDAQ",
+    "is_active": true,
+    "location": "Cupertino, CA",
+    "sic_code": "3571",
+    "sic_industry": "Electronic Computers",
+    "sic_sector": "Manufacturing",
+    "sec_filings_url": "https://.../cik=0000320193"
+  }
+}
+```
+
+Returns `404` if the company is not found in the scenario.
+
+## List companies
+
+```http
+GET /companies
+```
+
+List or search companies in a scenario.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | - | Filter to a single ticker. |
+| `search` | string | - | Free-text search over name, sector, industry, or ticker (≤128 chars). |
+| `limit` | integer | 100 | Page size (max 5000). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/companies?scenario_id=<id>&search=semiconductor&limit=25" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "companies": [ { "ticker": "NVDA", "name": "NVIDIA Corp.", "sector": "Technology", "...": "..." } ] }
+```
+
+## Discovery helpers
+
+List the identifiers actually present in a scenario.
+
+```http
+GET /company/facts/tickers
+```
+
+```json
+{ "tickers": ["AAPL", "MSFT", "NVDA", "..."] }
+```
+
+```http
+GET /company/facts/ciks
+```
+
+```json
+{ "ciks": ["0000320193", "0000789019", "..."] }
+```
+
+Both take only `scenario_id`.
+
+```bash
+curl -s "https://api.davidhf.com/company/facts/tickers?scenario_id=<id>" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```

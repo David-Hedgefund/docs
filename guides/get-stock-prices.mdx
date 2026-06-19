@@ -1,0 +1,57 @@
+---
+title: "How to get stock prices"
+description: "Pull OHLCV history, snapshots, and market-wide snapshots."
+---
+
+This guide covers the three ways to read prices from a scenario: a historical window, a point-in-time snapshot, and a market-wide snapshot.
+
+## Historical OHLCV
+
+Pull daily bars for a ticker, optionally bounded by a date window:
+
+```bash
+curl -s "https://api.davidhf.com/prices?scenario_id=<id>&ticker=AAPL&interval=day&start_date=2026-01-02&end_date=2026-03-27" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+Only `interval=day` is supported. Page large ranges with `limit` (max 10000) and `offset`.
+
+### Return components
+
+To see *why* a bar moved, market, sector, idiosyncratic, and event contributions, add `include_components=true`:
+
+```bash
+curl -s "https://api.davidhf.com/prices?scenario_id=<id>&ticker=AAPL&include_components=true&limit=5" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+This is useful for attribution and for training models that should separate systematic from idiosyncratic moves.
+
+## Point-in-time snapshot
+
+The single bar visible as of a date, exactly what a participant would have seen at the close:
+
+```bash
+curl -s "https://api.davidhf.com/prices/snapshot?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Market-wide snapshot
+
+A cross-section of the whole scenario as of a date, good for building daily universe states:
+
+```bash
+curl -s "https://api.davidhf.com/prices/snapshot/market?scenario_id=<id>&as_of=2026-03-26&limit=500" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+<Tip>
+  For a backtest, step the `as_of` date forward day by day and pull the market snapshot at each step. David never returns future bars, so the loop is leakage-free by construction. See [Point-in-time agents](/guides/point-in-time-agents).
+</Tip>
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Prices API" icon="chart-line" href="/api-reference/prices" />
+  <Card title="Date semantics" icon="clock" href="/concepts/date-semantics" />
+</CardGroup>

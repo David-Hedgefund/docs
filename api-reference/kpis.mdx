@@ -1,0 +1,107 @@
+---
+title: "KPIs & guidance"
+description: "Management guidance, KPI metrics, and non-GAAP reconciliations."
+---
+
+These endpoints expose the operating KPIs and forward guidance management discloses alongside earnings, plus non-GAAP reconciliations.
+
+## Guidance
+
+```http
+GET /kpi/guidance
+```
+
+Management guidance ranges and point estimates by metric and period.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | - | **Required.** |
+| `period` | string | all | Filter by guidance period label. |
+| `limit` | integer | 10 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/kpi/guidance?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "kpi_guidance": [
+    {
+      "ticker": "AAPL",
+      "metric_name": "revenue",
+      "period": "Q2 2026",
+      "period_type": "quarter",
+      "unit": "USD",
+      "low": 120000000000,
+      "high": 124000000000,
+      "point_estimate": 122000000000,
+      "prior_value": 119500000000,
+      "change_direction": "raised",
+      "raw_text": "We expect second-quarter revenue between $120B and $124B.",
+      "source_url": "https://.../"
+    }
+  ]
+}
+```
+
+## KPI metrics
+
+```http
+GET /kpi/metrics
+```
+
+Sector-aware operating KPIs derived from each period's statements.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | - | **Required.** |
+| `period` | string | `quarterly` | `quarterly` \| `annual`. |
+| `limit` | integer | 8 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/kpi/metrics?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Non-GAAP
+
+```http
+GET /kpi/non-gaap
+```
+
+Non-GAAP metrics and their reconciliation to GAAP for each period.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | - | **Required.** |
+| `period` | string | `quarterly` | `quarterly` \| `annual`. |
+| `limit` | integer | 8 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/kpi/non-gaap?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "non_gaap": [ { "ticker": "AAPL", "report_period": "2026-03-31", "adjusted_eps": 2.31, "...": "..." } ] }
+```
+
+## Discovery helpers
+
+```http
+GET /kpi/metrics/tickers
+GET /kpi/metrics/sectors
+```
+
+`/tickers` returns tickers with KPI metrics; `/sectors` returns the distinct sectors present. Both take only `scenario_id`.
+
+```json
+{ "sectors": ["Technology", "Energy", "Financials", "..."] }
+```

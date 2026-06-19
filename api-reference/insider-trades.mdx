@@ -1,0 +1,68 @@
+---
+title: "Insider trades"
+description: "Form 4–style insider transactions with rich filtering."
+---
+
+Insider trades are Form 4–style transactions by company insiders: purchases, sales, and option exercises with shares, price, and value. Two endpoints serve the same underlying data: `/insider-trades` adds rich filters, while `/insider-transactions` is the simpler list form. Non-operating instruments return no insider trades.
+
+## Insider trades
+
+```http
+GET /insider-trades
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `name` | string | all | Filter by insider name. |
+| `transaction_type` | string | all | Filter by type (e.g. `buy`, `sell`). |
+| `filing_date_gte` | date | - | Filed on or after. |
+| `filing_date_lte` | date | - | Filed on or before. |
+| `limit` | integer | 10 | Page size (max 200). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/insider-trades?scenario_id=<id>&ticker=AAPL&transaction_type=sell&filing_date_gte=2026-01-01" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "insider_trades": [
+    {
+      "id": "ins_...",
+      "ticker": "AAPL",
+      "insider_name": "Jane Doe",
+      "role": "CFO",
+      "transaction_date": "2026-02-14",
+      "transaction_type": "sell",
+      "shares": 25000,
+      "price": 188.5,
+      "value": 4712500,
+      "filing_date": "2026-02-16",
+      "details": { "...": "..." }
+    }
+  ]
+}
+```
+
+## Insider transactions
+
+```http
+GET /insider-transactions
+```
+
+The simpler list form: same row shape, fewer filters.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `limit` | integer | 50 | Page size (max 200). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/insider-transactions?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```

@@ -1,0 +1,75 @@
+---
+title: "Synthetic data & provenance"
+description: "What David generates, what is real, and how determinism and consistency are guaranteed."
+---
+
+David is a **synthetic** data API. Understanding exactly what is generated versus what is real is essential to using it correctly.
+
+## What is synthetic
+
+Effectively everything that carries financial meaning is generated:
+
+- Prices and OHLCV bars
+- Income statements, balance sheets, cash-flow statements, and metrics
+- Earnings results, surprises, guidance, and analyst estimates
+- News articles, analyst notes, and SEC-style filings
+- Insider trades, institutional holdings, and corporate actions
+- The macro tape and central-bank policy path
+- Events and their effects
+
+None of these are real issuer histories. They are deterministic functions of a scenario's seed and configuration.
+
+## What is real
+
+Two things are grounded in real-world reference data:
+
+1. **Ticker symbols.** David uses real exchange-style symbol aliases (e.g. `AAPL`, `NVDA`, `SPY`) so your tooling and ticker lists work unchanged. The bundled universe contains **16,143 unique public US symbols** from SEC/Nasdaq snapshots.
+2. **Company reference identity.** Display metadata (name, sector, industry, business description, employee count, market-cap tier, instrument type) is sourced from **yfinance** and cached, so `AAPL` reads as *Apple, Consumer Electronics* and `SPY` reads as *an S&P 500 ETF*.
+
+<Warning>
+  Real symbols and real names do **not** mean real data. The prices, fundamentals, news, filings, ownership, and events behind every symbol are synthetic scenario data. A symbol that yfinance has no data for is left `Unclassified` rather than assigned a fabricated sector.
+</Warning>
+
+## Determinism
+
+David's defining property is determinism. A scenario is built from a seed plus configuration, and the same inputs always produce the same world, down to individual price bars and headline text.
+
+Generation also follows a fixed dependency order, so the world is *internally* consistent rather than a pile of independent random series:
+
+<Frame caption="Each layer is derived from the one above it, so the world stays internally consistent.">
+  <img className="mx-auto block dark:hidden" style={{ width: "100%", maxWidth: "440px" }} src="/images/generation-flow-light.svg" alt="Generation pipeline from macro regime down through company identities, statements, estimates, events, prices, artifacts, and a final validation report." />
+  <img className="mx-auto hidden dark:block" style={{ width: "100%", maxWidth: "440px" }} src="/images/generation-flow-dark.svg" alt="Generation pipeline from macro regime down through company identities, statements, estimates, events, prices, artifacts, and a final validation report." />
+</Frame>
+
+David first generates the **hidden truth** of the world, then derives fundamentals, expectations, events, prices, and finally the public artifacts from that truth. The hidden state is never exposed through the API; only its downstream, point-in-time observable effects are.
+
+## Internal consistency
+
+Because the world is derived from a single hidden truth, the data ties together:
+
+- Accounting identities hold (balance sheet balances, cash reconciles, EPS ties out).
+- OHLC and volume invariants hold (`low ≤ open, close ≤ high`; event days spike volume).
+- Prices react to earnings: significant beats/misses move the stock in the right direction.
+- News and filings **repeat** the numbers in the structured records instead of drifting from them.
+- Filings carry the metadata (accession, CIK, item codes) and link back to the events that triggered them via `source_event_id`.
+
+Every scenario ships a [validation report](/api-reference/scenarios#validation-report) that checks these properties, plus a per-ticker [dataset-quality report](/api-reference/scenarios#dataset-quality).
+
+## Calibration
+
+David's generator is tuned against **stylized facts** of real markets (return distributions, volatility clustering, drawdown frequency, volume/reaction coupling, tail behavior, and cross-sector correlation) measured from market panels. The [`/metadata/empirical-calibration`](/api-reference/metadata#empirical-calibration) endpoint reports the current calibration manifest and gate margins.
+
+<Info>
+  Calibration means the synthetic data *resembles* real markets statistically. It does not mean David copies real time series. David is a research and evaluation tool, not a licensed feed of real market data.
+</Info>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Ticker universe" icon="hashtag" href="/concepts/ticker-universe">
+    Real symbols, instrument types, and ETF suppression rules.
+  </Card>
+  <Card title="Market coverage" icon="globe" href="/concepts/market-coverage">
+    Scale, presets, and how far the universe goes.
+  </Card>
+</CardGroup>

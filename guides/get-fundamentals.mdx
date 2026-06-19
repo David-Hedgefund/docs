@@ -1,0 +1,71 @@
+---
+title: "How to get fundamentals"
+description: "Pull statements, metrics, and earnings for a company in a scenario."
+---
+
+This guide walks through fetching a company's fundamentals, financial statements, metrics, and earnings, inside a scenario.
+
+## 1. Pick a scenario and ticker
+
+List scenarios and grab an `id`, then check which tickers it contains:
+
+```bash
+curl -s "https://api.davidhf.com/scenarios?limit=1" -H "X-API-KEY: YOUR_API_KEY"
+curl -s "https://api.davidhf.com/company/facts/tickers?scenario_id=<id>" -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## 2. Get company facts
+
+```bash
+curl -s "https://api.davidhf.com/company/facts?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+Confirm `category` is `Operating Company`, non-operating instruments (ETFs, warrants) won't have statements.
+
+## 3. Pull the statements
+
+```bash
+# Income statement, last 8 quarters
+curl -s "https://api.davidhf.com/financials/income-statements?scenario_id=<id>&ticker=AAPL&period=quarterly&limit=8" \
+  -H "X-API-KEY: YOUR_API_KEY"
+
+# All three statements together
+curl -s "https://api.davidhf.com/financials?scenario_id=<id>&ticker=AAPL&period=quarterly&limit=4" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+Use `period=annual` or `period=ttm` for other views, and `report_period_gte` / `report_period_lte` to bound the fiscal range.
+
+## 4. Add metrics and earnings
+
+```bash
+# Valuation, margin, and return ratios
+curl -s "https://api.davidhf.com/financial-metrics?scenario_id=<id>&ticker=AAPL&period=ttm&limit=4" \
+  -H "X-API-KEY: YOUR_API_KEY"
+
+# Earnings results with consensus, actuals, and surprises
+curl -s "https://api.davidhf.com/earnings?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## 5. Screen across companies
+
+To find companies by metric rather than pulling one at a time, use the [screener](/api-reference/search):
+
+```bash
+curl -s -X POST "https://api.davidhf.com/financials/search/screener" \
+  -H "X-API-KEY: YOUR_API_KEY" -H "Content-Type: application/json" \
+  -d '{"scenario_id":"<id>","period":"ttm","filters":{"gross_margin":{"gte":0.4}}}'
+```
+
+<Tip>
+  Statements satisfy accounting identities by construction. If you're building a checker, compare your computed totals against the scenario's [validation report](/api-reference/scenarios#validation-report).
+</Tip>
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Financial statements" icon="file-invoice-dollar" href="/api-reference/financial-statements" />
+  <Card title="Financial metrics" icon="calculator" href="/api-reference/financial-metrics" />
+</CardGroup>

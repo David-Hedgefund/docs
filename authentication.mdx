@@ -1,0 +1,65 @@
+---
+title: "Authentication"
+description: "API keys and rate limits."
+---
+
+David authenticates every request with an API key passed in the `X-API-KEY` header. There are no cookies, OAuth flows, or signed requests, just the header.
+
+```bash
+curl -s "https://api.davidhf.com/scenarios" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+<Warning>
+  Treat your API key like a password. Send it only over HTTPS and never embed it in client-side code or commit it to source control.
+</Warning>
+
+## Getting a key
+
+Your API key is available from the [dashboard](https://data.davidhf.com). If you don't have access yet, contact [investors@davidhf.com](mailto:investors@davidhf.com).
+
+## The API key header
+
+| Header | Required | Description |
+| --- | --- | --- |
+| `X-API-KEY` | Yes | Your API key. Identifies your account and its rate limit. |
+
+Every data endpoint requires a valid key. The only unauthenticated path is the `/health` check.
+
+If the header is missing or invalid, David returns `401`:
+
+```json
+{ "detail": "Missing or invalid X-API-KEY header" }
+```
+
+## Rate limits
+
+Requests are rate limited per key over a rolling 60-second window. Every response carries the current state in its headers:
+
+| Header | Description |
+| --- | --- |
+| `X-RateLimit-Limit` | Requests allowed per minute for your key. |
+| `X-RateLimit-Remaining` | Requests left in the current window. |
+
+When you exceed the limit, David returns `429`:
+
+```json
+{ "detail": "Rate limit exceeded" }
+```
+
+Back off and retry after the window resets (at most 60 seconds).
+
+<Tip>
+  Watch `X-RateLimit-Remaining` and throttle proactively rather than waiting for a `429`. If you need a higher limit for large backtests, contact [investors@davidhf.com](mailto:investors@davidhf.com).
+</Tip>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Errors & rate limits" icon="triangle-exclamation" href="/errors">
+    Status codes and how to handle them.
+  </Card>
+  <Card title="API overview" icon="code" href="/api-reference/overview">
+    Base URL, conventions, and shared parameters.
+  </Card>
+</CardGroup>

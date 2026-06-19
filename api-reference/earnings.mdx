@@ -1,0 +1,94 @@
+---
+title: "Earnings"
+description: "Earnings results, surprises, press releases, and the earnings calendar."
+---
+
+Earnings endpoints return quarterly/annual earnings results with consensus, actuals, surprises, and the synthetic press release, plus a forward-looking earnings calendar.
+
+## Earnings
+
+```http
+GET /earnings
+```
+
+Earnings results for a ticker (or across the scenario when `ticker` is omitted).
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `limit` | integer | 4 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/earnings?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "earnings": [
+    {
+      "ticker": "AAPL",
+      "report_period": "2026-03-31",
+      "filing_date": "2026-04-24",
+      "accession_number": "0000320193-26-000018",
+      "fiscal_period": "Q1",
+      "currency": "USD",
+      "filing_datetime": "2026-04-24T16:30:00",
+      "signals": { "revenue_surprise": 0.021, "eps_surprise": -0.014, "guidance": "cut" },
+      "press_release": "Apple today announced financial results ...",
+      "quarterly": { "revenue": 124300000000, "eps": 2.18, "...": "..." },
+      "annual": { "...": "..." }
+    }
+  ]
+}
+```
+
+The `signals` block carries the revenue and EPS surprise and the guidance direction. News and filings repeat these same numbers. See [Synthetic data](/concepts/synthetic-data#internal-consistency).
+
+## Earnings calendar
+
+```http
+GET /earnings/calendar
+```
+
+Upcoming/known earnings dates for a ticker.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | - | **Required.** |
+| `limit` | integer | 20 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/earnings/calendar?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "earnings_calendar": [
+    {
+      "ticker": "AAPL",
+      "report_period": "2026-03-31",
+      "fiscal_period": "Q1",
+      "earnings_date": "2026-04-24",
+      "filing_datetime": "2026-04-24T16:30:00"
+    }
+  ]
+}
+```
+
+## Discovery helper
+
+```http
+GET /earnings/tickers
+```
+
+Takes only `scenario_id`; returns tickers with earnings.
+
+```json
+{ "tickers": ["AAPL", "MSFT", "..."] }
+```

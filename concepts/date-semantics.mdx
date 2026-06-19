@@ -1,0 +1,58 @@
+---
+title: "Date semantics"
+description: "How scenario-clock dates, visibility windows, and point-in-time filtering work."
+---
+
+Dates in David are **synthetic scenario-clock labels**. They are not representations of real issuer histories. They exist so you can do the things a serious market-data API must support:
+
+- Point-in-time filtering
+- Price windows
+- Earnings calendars
+- Filing and news visibility
+- Agent replay
+- Leakage prevention
+
+## The scenario clock
+
+Each scenario has its own clock defined by `start_date`, `end_date`, and `current_date` (the "as-of now" point). For **historical-context** scenarios, the clock is anchored to a plausible historical analog era for the theme. For **future-branch** scenarios, the clock starts on or after the forecast as-of date and runs forward.
+
+In both cases, the generated issuer values are synthetic; the dates are labels for ordering, visibility, and replay, not claims about what really happened on that calendar date.
+
+<Info>
+  A scenario's manifest exposes a `time_basis` block with `date_semantics`, `path_mode`, and `path_mode_description` so agents can reason about the clock correctly. See [`GET /scenarios/{id}/manifest`](/api-reference/scenarios#manifest).
+</Info>
+
+## Visibility and leakage control
+
+David tracks a release date for every piece of generated data. Artifacts (news, filings, notes, events) carry both a `date` and a `visible_from` timestamp. When you pass an `as_of` date, David returns only what would have been visible at that point, nothing from the future leaks in.
+
+This is what makes leakage-free backtesting possible: an agent stepping through the scenario day by day sees exactly the information set a real participant would have had.
+
+## Date parameters
+
+Endpoints accept ISO `YYYY-MM-DD` dates through a consistent set of parameters:
+
+| Parameter | Meaning | Where |
+| --- | --- | --- |
+| `as_of` | Point-in-time cutoff, return only data visible on or before this date. | News, events, snapshots, estimates, metrics snapshot, interest-rate snapshot |
+| `start_date` / `end_date` | Inclusive window for time-series data. | Prices, macro, news, events |
+| `report_period_gte` / `report_period_lte` | Filter statements by fiscal report period. | Financial statements |
+| `filing_date_gte` / `filing_date_lte` | Filter by filing date. | Insider trades |
+| `report_period_gte` / `report_period_lte` | Filter holdings by report period. | Institutional holdings |
+
+## Best practices
+
+- **Always pass `as_of`** in agent loops to enforce point-in-time visibility.
+- **Use windows** (`start_date`/`end_date`) instead of pulling full history and filtering client-side.
+- **Don't treat dates as real.** A 1993 date in a historical-context scenario is a scenario-clock label, not a claim about 1993 markets.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Point-in-time agents" icon="clock" href="/guides/point-in-time-agents">
+    A leakage-free backtest loop, step by step.
+  </Card>
+  <Card title="Prices API" icon="chart-line" href="/api-reference/prices">
+    Windows, snapshots, and market snapshots.
+  </Card>
+</CardGroup>

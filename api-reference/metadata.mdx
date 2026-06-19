@@ -1,0 +1,120 @@
+---
+title: "Metadata"
+description: "Coverage map, scale presets, scenario themes, calibration, and quality audits."
+---
+
+Metadata endpoints describe the platform itself: what's covered, how it scales, which themes exist, and how the synthetic data is calibrated and audited. These endpoints are scenario-independent unless noted.
+
+## Financial Datasets coverage
+
+```http
+GET /metadata/financial-datasets-coverage
+```
+
+The live map of David's endpoint surface against the Financial Datasets API surface, including which operations are native vs. derived compatibility views.
+
+```bash
+curl -s "https://api.davidhf.com/metadata/financial-datasets-coverage" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "financial_datasets_coverage": {
+    "implemented_operation_count": 49,
+    "coverage_ratio": 1.0,
+    "operations": ["..."],
+    "important_note": "The paths are compatible synthetic equivalents and include derived views ..."
+  }
+}
+```
+
+## Scale presets
+
+```http
+GET /metadata/scale-presets
+```
+
+The available scale presets: combinations of scenario count, ticker count, and horizon. See [Market coverage](/concepts/market-coverage).
+
+```bash
+curl -s "https://api.davidhf.com/metadata/scale-presets" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Scenario themes
+
+```http
+GET /metadata/scenario-themes
+```
+
+The full theme catalog: id, title, description, macro regime, event template, sectors, market mechanics, and the agent task each theme poses.
+
+```bash
+curl -s "https://api.davidhf.com/metadata/scenario-themes" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "scenario_themes": [
+    {
+      "id": "geopolitical_war_energy_shock",
+      "title": "War-driven energy shock",
+      "description": "A regional war disrupts energy supply ...",
+      "macro_regime": "inflation_shock",
+      "event_template": "...",
+      "sectors": ["Energy", "Industrials", "..."],
+      "market_mechanics": ["energy and materials gain on commodity pricing power", "..."],
+      "agent_task": "Separate durable commodity winners from temporary spikes."
+    }
+  ]
+}
+```
+
+## Institutional readiness
+
+```http
+GET /metadata/institutional-readiness
+```
+
+A readiness report describing the calibration and quality gates the data is evaluated against.
+
+```bash
+curl -s "https://api.davidhf.com/metadata/institutional-readiness" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Empirical calibration
+
+```http
+GET /metadata/empirical-calibration
+```
+
+The calibration manifest: stylized-fact gates (volatility, kurtosis, clustering, drawdown, tails, coverage) and current margins against measured market panels.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `panel_path` | string | Optional path to a calibration panel to evaluate against. |
+
+```bash
+curl -s "https://api.davidhf.com/metadata/empirical-calibration" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Synthetic-data audit
+
+```http
+GET /metadata/synthetic-data-audit
+```
+
+A library-wide self-audit: scenario uniqueness, intentional repeated-theme variants, path-mode and horizon diversity, and calibration-gate margins across the library.
+
+```bash
+curl -s "https://api.davidhf.com/metadata/synthetic-data-audit" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+<Info>
+  Per-scenario quality lives on the [Scenarios](/api-reference/scenarios) endpoints: [`/validation`](/api-reference/scenarios#validation-report) for consistency and [`/dataset-quality`](/api-reference/scenarios#dataset-quality) for per-ticker richness. The endpoints here audit the platform and library as a whole.
+</Info>

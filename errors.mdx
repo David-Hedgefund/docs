@@ -1,0 +1,66 @@
+---
+title: "Errors & rate limits"
+description: "HTTP status codes David returns and how to handle them."
+---
+
+David uses conventional HTTP status codes and returns errors as JSON with a single `detail` field.
+
+```json
+{ "detail": "Scenario not found" }
+```
+
+## Status codes
+
+| Code | Meaning | Common causes |
+| --- | --- | --- |
+| `200` | Success | The request succeeded. |
+| `400` | Bad request | Invalid parameter combination, for example `interval` other than `day`, or passing both `ticker` and `holding` to `/index-funds`. |
+| `401` | Unauthorized | Missing or invalid `X-API-KEY` header. |
+| `403` | Forbidden | Your key doesn't have access to the requested resource. |
+| `404` | Not found | Unknown `scenario_id`, ticker, CIK, bank code, or artifact id. |
+| `422` | Unprocessable entity | A request body or query parameter failed validation, for example a `limit` above the allowed maximum, or a malformed filter on a `POST` search endpoint. |
+| `429` | Too many requests | You exceeded your key's per-minute rate limit. |
+
+## Validation errors
+
+Validation errors (on `POST` search endpoints like [`/financials/search/screener`](/api-reference/search), or on out-of-range query parameters) follow the standard FastAPI shape, listing each offending field:
+
+```json
+{
+  "detail": [
+    {
+      "loc": ["query", "limit"],
+      "msg": "ensure this value is less than or equal to 10000",
+      "type": "value_error"
+    }
+  ]
+}
+```
+
+## Handling rate limits
+
+A `429` includes the rate-limit headers so you know your ceiling and when to retry. The window is a rolling 60 seconds.
+
+```json
+{ "detail": "Rate limit exceeded" }
+```
+
+Response headers on every request:
+
+| Header | Description |
+| --- | --- |
+| `X-RateLimit-Limit` | Requests allowed per minute. |
+| `X-RateLimit-Remaining` | Requests left in the current window. |
+| `X-Account-ID` | Account tied to your key. |
+
+<Tip>
+  Use exponential backoff with jitter on `429` and `5xx` responses. Monitor `X-RateLimit-Remaining` to throttle before you hit the limit.
+</Tip>
+
+## Empty results vs. errors
+
+David distinguishes "no data" from "error":
+
+- A query for a valid scenario and ticker that simply has no rows returns `200` with an empty list (e.g. `{"news": []}`).
+- Non-operating instruments (ETFs, warrants, units) intentionally return **empty** operating-company datasets (statements, earnings, issuer filings, insider trades) rather than errors. See [Ticker universe](/concepts/ticker-universe).
+- A genuinely unknown `scenario_id` or ticker returns `404`.

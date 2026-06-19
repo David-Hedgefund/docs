@@ -1,0 +1,158 @@
+---
+title: "Financial statements"
+description: "Income statements, balance sheets, cash-flow statements, normalized, as-reported, and segmented."
+---
+
+David serves the three core financial statements for every operating company, in three shapes:
+
+- **Normalized**: canonical line items, easiest to compute on.
+- **As-reported**: the statement projected into a source-style tree.
+- **Segmented**: broken out by business/geographic segment.
+
+A combined `/financials` family returns all three statements together. Non-operating instruments (ETFs, warrants, …) return empty lists. See [Ticker universe](/concepts/ticker-universe).
+
+<Info>
+  **Shared parameters.** Every endpoint on this page accepts `scenario_id` (required), `ticker` (required), `period` (`quarterly` \| `annual` \| `ttm`; default `quarterly`), `limit` (default 8, max 100), and `offset` (default 0). The normalized statement endpoints also accept `report_period_gte` and `report_period_lte` to filter by fiscal period.
+</Info>
+
+## Income statements
+
+```http
+GET /financials/income-statements
+GET /financials/income-statements/as-reported
+GET /financials/income-statements/segments
+```
+
+```bash
+curl -s "https://api.davidhf.com/financials/income-statements?scenario_id=<id>&ticker=AAPL&period=quarterly&limit=8" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "income_statements": [
+    {
+      "ticker": "AAPL",
+      "report_period": "2026-03-31",
+      "fiscal_period": "Q1",
+      "period": "quarterly",
+      "currency": "USD",
+      "accession_number": "0000320193-26-000012",
+      "filing_url": "https://.../",
+      "revenue": 124300000000,
+      "gross_profit": 56200000000,
+      "operating_income": 38900000000,
+      "net_income": 33700000000,
+      "earnings_per_share": 2.18
+    }
+  ]
+}
+```
+
+The `/as-reported` variant returns the statement as a source-style line-item tree; `/segments` breaks revenue and profit out by segment.
+
+## Balance sheets
+
+```http
+GET /financials/balance-sheets
+GET /financials/balance-sheets/as-reported
+GET /financials/balance-sheets/segments
+```
+
+```bash
+curl -s "https://api.davidhf.com/financials/balance-sheets?scenario_id=<id>&ticker=AAPL&period=quarterly" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "balance_sheets": [
+    {
+      "ticker": "AAPL",
+      "report_period": "2026-03-31",
+      "fiscal_period": "Q1",
+      "period": "quarterly",
+      "currency": "USD",
+      "total_assets": 352000000000,
+      "total_liabilities": 287000000000,
+      "shareholders_equity": 65000000000
+    }
+  ]
+}
+```
+
+## Cash-flow statements
+
+```http
+GET /financials/cash-flow-statements
+GET /financials/cash-flow-statements/as-reported
+GET /financials/cash-flow-statements/segments
+```
+
+```bash
+curl -s "https://api.davidhf.com/financials/cash-flow-statements?scenario_id=<id>&ticker=AAPL&period=quarterly" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "cash_flow_statements": [
+    {
+      "ticker": "AAPL",
+      "report_period": "2026-03-31",
+      "operating_cash_flow": 41200000000,
+      "investing_cash_flow": -3100000000,
+      "financing_cash_flow": -28400000000,
+      "free_cash_flow": 38100000000
+    }
+  ]
+}
+```
+
+## All statements combined
+
+```http
+GET /financials
+GET /financials/as-reported
+GET /financials/segments
+```
+
+Returns all three statements per period in a single response.
+
+```bash
+curl -s "https://api.davidhf.com/financials?scenario_id=<id>&ticker=AAPL&period=quarterly&limit=4" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "financials": [
+    {
+      "ticker": "AAPL",
+      "report_period": "2026-03-31",
+      "fiscal_period": "Q1",
+      "period": "quarterly",
+      "currency": "USD",
+      "income_statement": { "revenue": 124300000000, "...": "..." },
+      "balance_sheet": { "total_assets": 352000000000, "...": "..." },
+      "cash_flow_statement": { "operating_cash_flow": 41200000000, "...": "..." },
+      "metadata": { "...": "..." }
+    }
+  ]
+}
+```
+
+<Tip>
+  Statements satisfy accounting identities by construction: the balance sheet balances, cash reconciles, and EPS ties out. These checks appear in each scenario's [validation report](/api-reference/scenarios#validation-report).
+</Tip>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Financial metrics" icon="calculator" href="/api-reference/financial-metrics">
+    Ratios and a market-wide metrics snapshot.
+  </Card>
+  <Card title="Search & screener" icon="magnifying-glass" href="/api-reference/search">
+    Filter by metric and pull specific line items.
+  </Card>
+</CardGroup>

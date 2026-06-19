@@ -1,47 +1,134 @@
 ---
 title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+description: "Authenticate, choose a scenario, and pull your first synthetic market data."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+This guide takes you from zero to your first David response. You'll authenticate, find a scenario, and query prices, fundamentals, and news for a ticker inside that scenario.
 
 ## Prerequisites
 
-Before you begin, you must have:
+- An API key. Get one from the [dashboard](https://data.davidhf.com), and pass it in the `X-API-KEY` header on every request.
+- The base URL for all requests is `https://api.davidhf.com`.
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
+<Info>
+  Every data endpoint requires a `scenario_id`. A scenario is a self-contained synthetic market world. See [Scenarios](/concepts/scenarios) for the full model.
+</Info>
 
 ## Get started
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Authenticate">
+    Send your key in the `X-API-KEY` header. A quick health check confirms the connection:
 
     ```bash
-    npm install your-package
+    curl -s https://api.davidhf.com/health \
+      -H "X-API-KEY: YOUR_API_KEY"
+    ```
+
+    ```json
+    { "status": "ok", "environment": "production" }
     ```
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+
+  <Step title="Find a scenario">
+    David ships with a library of ready-made scenarios. List them to grab a `scenario_id`:
 
     ```bash
-    your-cli init
+    curl -s "https://api.davidhf.com/scenarios?limit=3" \
+      -H "X-API-KEY: YOUR_API_KEY"
+    ```
+
+    ```json
+    {
+      "scenarios": [
+        {
+          "id": "6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0",
+          "status": "ready",
+          "name": "War-driven energy shock: shipping-lane escalation ...",
+          "start_date": "1993-05-28",
+          "end_date": "2023-05-08",
+          "public_summary": { "scenario_theme": "geopolitical_war_energy_shock", "...": "..." }
+        }
+      ]
+    }
+    ```
+
+    Copy an `id`. You'll use it as `scenario_id` in every query below.
+  </Step>
+
+  <Step title="See what's inside">
+    Inspect a scenario's manifest to see its date range and available tickers:
+
+    ```bash
+    curl -s "https://api.davidhf.com/scenarios/6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0" \
+      -H "X-API-KEY: YOUR_API_KEY"
+    ```
+
+    The response includes `available_tickers` (e.g. `AAPL`, `MSFT`, `NVDA`) and a `public_summary` describing the market world.
+  </Step>
+
+  <Step title="Pull prices">
+    Query daily OHLCV for a ticker in that scenario:
+
+    ```bash
+    curl -s "https://api.davidhf.com/prices?scenario_id=6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0&ticker=AAPL&interval=day&limit=5" \
+      -H "X-API-KEY: YOUR_API_KEY"
+    ```
+
+    ```json
+    {
+      "ticker": "AAPL",
+      "prices": [
+        { "ticker": "AAPL", "open": 182.4, "high": 184.1, "low": 181.2, "close": 183.6, "volume": 51200000, "time": "2026-01-02" }
+      ]
+    }
     ```
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+
+  <Step title="Pull fundamentals and news">
+    Same `scenario_id`, different endpoint:
 
     ```bash
-    your-cli start
+    # Quarterly income statements
+    curl -s "https://api.davidhf.com/financials/income-statements?scenario_id=6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0&ticker=AAPL&period=quarterly&limit=4" \
+      -H "X-API-KEY: YOUR_API_KEY"
+
+    # Latest news visible as of a date
+    curl -s "https://api.davidhf.com/news?scenario_id=6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0&ticker=AAPL&as_of=2026-03-20" \
+      -H "X-API-KEY: YOUR_API_KEY"
     ```
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## Browse more scenarios
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
+David curates the full scenario library, you don't generate worlds, you choose from them. Filter the library to assemble the sets you need:
+
+```bash
+# Future-branch scenarios that passed validation
+curl -s "https://api.davidhf.com/scenarios?path_mode=future_branch&healthy_only=true&limit=10" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+Need a world with characteristics the library doesn't cover? Reach out at [investors@davidhf.com](mailto:investors@davidhf.com) and we'll generate it.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Scenarios" icon="layer-group" href="/concepts/scenarios">
+    How worlds are scoped, validated, and replayed.
+  </Card>
+  <Card title="Authentication" icon="key" href="/authentication">
+    Keys, accounts, plans, and rate limits.
+  </Card>
+  <Card title="Point-in-time agents" icon="clock" href="/guides/point-in-time-agents">
+    Build a leakage-free backtest loop.
+  </Card>
+  <Card title="API reference" icon="code" href="/api-reference/overview">
+    Every endpoint in detail.
+  </Card>
+</CardGroup>
+
+<Tip>
+  Need help? Reach out at [investors@davidhf.com](mailto:investors@davidhf.com).
 </Tip>

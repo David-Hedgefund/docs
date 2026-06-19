@@ -1,0 +1,85 @@
+---
+title: "Financial metrics"
+description: "Valuation, margin, return, and leverage ratios, plus a market-wide snapshot."
+---
+
+Financial metrics are derived ratios computed from a company's statements and price: valuation multiples, margins, returns, and leverage.
+
+## Metrics
+
+```http
+GET /financial-metrics
+```
+
+Time series of metrics for a single ticker.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | - | **Required.** |
+| `period` | string | `ttm` | `ttm` \| `quarterly` \| `annual`. |
+| `limit` | integer | 4 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/financial-metrics?scenario_id=<id>&ticker=AAPL&period=ttm&limit=4" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "financial_metrics": [
+    {
+      "ticker": "AAPL",
+      "report_period": "2026-03-31",
+      "period": "ttm",
+      "currency": "USD",
+      "price_to_earnings_ratio": 28.4,
+      "price_to_sales_ratio": 7.1,
+      "gross_margin": 0.452,
+      "operating_margin": 0.312,
+      "net_margin": 0.271,
+      "return_on_equity": 0.51,
+      "debt_to_equity": 1.4,
+      "market_cap": 2950000000000
+    }
+  ]
+}
+```
+
+## Metrics snapshot
+
+```http
+GET /financial-metrics/snapshot
+```
+
+A point-in-time metrics snapshot across one or many tickers, joined with the price as of a date.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `as_of` | date | latest | Price-snapshot cutoff. |
+| `limit` | integer | 100 | Tickers (max 5000). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/financial-metrics/snapshot?scenario_id=<id>&as_of=2026-03-26&limit=50" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "financial_metrics": [ { "ticker": "AAPL", "price_to_earnings_ratio": 28.4, "market_cap": 2950000000000, "...": "..." } ] }
+```
+
+## Discovery helper
+
+```http
+GET /financial-metrics/snapshot/tickers
+```
+
+Takes only `scenario_id`; returns tickers with metrics.
+
+```json
+{ "tickers": ["AAPL", "MSFT", "..."] }
+```

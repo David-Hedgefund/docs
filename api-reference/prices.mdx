@@ -1,0 +1,111 @@
+---
+title: "Prices"
+description: "Daily OHLCV bars, point-in-time snapshots, and market-wide snapshots."
+---
+
+Price endpoints serve daily OHLCV bars for any ticker in a scenario, plus single-day and market-wide snapshots. All prices are synthetic, generated from market, sector, and event return components.
+
+## Historical prices
+
+```http
+GET /prices
+```
+
+Daily OHLCV bars for a ticker within an optional date window.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | - | **Required.** |
+| `interval` | string | `day` | Only `day` is supported; other values return `400`. |
+| `start_date` | date | - | Inclusive window start. |
+| `end_date` | date | - | Inclusive window end. |
+| `include_components` | boolean | false | Include return-decomposition fields (see below). |
+| `limit` | integer | 5000 | Max bars (max 10000). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/prices?scenario_id=<id>&ticker=AAPL&interval=day&start_date=2026-01-02&end_date=2026-03-27" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "ticker": "AAPL",
+  "prices": [
+    { "ticker": "AAPL", "open": 182.4, "high": 184.1, "low": 181.2, "close": 183.6, "volume": 51200000, "time": "2026-01-02" }
+  ]
+}
+```
+
+### Components
+
+With `include_components=true`, each bar adds the decomposition David used to generate it:
+
+| Field | Description |
+| --- | --- |
+| `adjusted_close` | Split/dividend-adjusted close. |
+| `market_return` | Market-factor component of the day's return. |
+| `sector_return` | Sector-factor component. |
+| `idiosyncratic_return` | Stock-specific component. |
+| `event_return` | Component attributable to a scenario event. |
+| `volatility` | Modeled volatility for the bar. |
+| `metadata` | Additional bar metadata. |
+
+## Price snapshot
+
+```http
+GET /prices/snapshot
+```
+
+The single bar visible as of a date, useful for point-in-time valuation.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `scenario_id` | string | **Required.** |
+| `ticker` | string | **Required.** |
+| `as_of` | date | **Required.** Cutoff date. |
+
+```bash
+curl -s "https://api.davidhf.com/prices/snapshot?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "snapshot": { "ticker": "AAPL", "close": 191.2, "time": "2026-03-26", "...": "..." } }
+```
+
+Returns `404` if no bar exists on or before `as_of`.
+
+## Market snapshot
+
+```http
+GET /prices/snapshot/market
+```
+
+A market-wide snapshot across many tickers as of a date.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `as_of` | date | latest | Cutoff date. |
+| `limit` | integer | 500 | Tickers (max 5000). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/prices/snapshot/market?scenario_id=<id>&as_of=2026-03-26" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Discovery helpers
+
+```http
+GET /prices/tickers
+GET /prices/snapshot/tickers
+```
+
+Both take only `scenario_id` and return the tickers with price data.
+
+```json
+{ "tickers": ["AAPL", "MSFT", "NVDA", "..."] }
+```

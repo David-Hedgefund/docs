@@ -1,0 +1,66 @@
+---
+title: "Building point-in-time agents"
+description: "Run a leakage-free backtest loop over a scenario."
+---
+
+David is built for financial agents. Its point-in-time guarantees let you step an agent through a scenario day by day without it ever seeing the future. This guide outlines the loop.
+
+## The core idea
+
+Every artifact in David carries a release date and a `visible_from` timestamp. When you pass `as_of`, David returns only what would have been visible at that point. So a backtest is simply: advance the clock, query with `as_of`, decide, repeat.
+
+<Frame>
+  <img className="block dark:hidden" style={{ width: "100%", height: "auto" }} src="/images/backtest-loop-light.svg" alt="Pick a scenario and set as_of, then loop: query data visible as_of, the agent decides, advance as_of, repeat until end_date." />
+  <img className="hidden dark:block" style={{ width: "100%", height: "auto" }} src="/images/backtest-loop-dark.svg" alt="Pick a scenario and set as_of, then loop: query data visible as_of, the agent decides, advance as_of, repeat until end_date." />
+</Frame>
+
+## 1. Choose a scenario and horizon
+
+```bash
+curl -s "https://api.davidhf.com/scenarios/<id>/manifest" -H "X-API-KEY: YOUR_API_KEY"
+```
+
+The manifest gives you `date_range`, `tickers`, and the `time_basis` (including `path_mode`) so you know the clock you're stepping through.
+
+## 2. Step the clock
+
+At each `as_of` date, pull the information set:
+
+```bash
+# Market state
+curl -s "https://api.davidhf.com/prices/snapshot/market?scenario_id=<id>&as_of=2026-03-26" -H "X-API-KEY: YOUR_API_KEY"
+
+# News visible so far
+curl -s "https://api.davidhf.com/news?scenario_id=<id>&as_of=2026-03-26&limit=50" -H "X-API-KEY: YOUR_API_KEY"
+
+# Events visible so far
+curl -s "https://api.davidhf.com/events/timeline?scenario_id=<id>&as_of=2026-03-26" -H "X-API-KEY: YOUR_API_KEY"
+
+# Consensus as of now
+curl -s "https://api.davidhf.com/analyst-estimates?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" -H "X-API-KEY: YOUR_API_KEY"
+```
+
+Because each call is bounded by `as_of`, nothing from after that date can leak into the agent's reasoning.
+
+## 3. Decide, advance, repeat
+
+Feed the visible data to your agent, record its decision, advance `as_of` to the next trading day, and loop until you reach the scenario's `end_date`.
+
+## 4. Grade the run
+
+After the run, score the agent against what actually happened in the scenario. Because the world is fixed and consistent, you can grade decisions by replaying realized outcomes: forward prices from [`/prices`](/api-reference/prices), realized earnings from [`/earnings`](/api-reference/earnings), and the full [event timeline](/api-reference/sectors-and-events#event-timeline), all queried *without* an `as_of` bound so you see the complete path.
+
+<Tip>
+  Keep the grading queries in your evaluation layer, separate from the agent's own request path. The agent should only ever see data bounded by its current `as_of`.
+</Tip>
+
+## Scaling to train/test
+
+Use separate scenarios for train, validation, test, and holdout. David curates the library across all four splits; [filter it](/api-reference/scenarios#list-scenarios) to assemble each set. Because worlds are isolated, there's no cross-split leakage.
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Date semantics" icon="clock" href="/concepts/date-semantics" />
+  <Card title="Scenarios" icon="layer-group" href="/concepts/scenarios" />
+</CardGroup>

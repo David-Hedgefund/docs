@@ -1,0 +1,42 @@
+<svg viewBox="0 0 560 604" width="560" height="604" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" font-family="ui-sans-serif, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <filter id="sh" x="-20%" y="-40%" width="140%" height="180%">
+      <feDropShadow dx="0" dy="2" stdDeviation="5" flood-color="#1F3A60" flood-opacity="0.10"/>
+    </filter>
+    <marker id="arw" viewBox="0 0 12 12" refX="8" refY="6" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#8aa0bf"/>
+    </marker>
+  </defs>
+  <rect x="2" y="2" width="556" height="600" rx="20" fill="#F7F9FC" stroke="#E6ECF4"/>
+  <line x1="310" y1="80" x2="310" y2="104" stroke="#8aa0bf" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arw)"/>
+  <line x1="310" y1="150" x2="310" y2="174" stroke="#8aa0bf" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arw)"/>
+  <line x1="310" y1="220" x2="310" y2="244" stroke="#8aa0bf" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arw)"/>
+  <line x1="310" y1="290" x2="310" y2="314" stroke="#8aa0bf" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arw)"/>
+  <line x1="310" y1="360" x2="310" y2="384" stroke="#8aa0bf" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arw)"/>
+  <line x1="310" y1="430" x2="310" y2="454" stroke="#8aa0bf" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arw)"/>
+  <line x1="310" y1="500" x2="310" y2="524" stroke="#8aa0bf" stroke-width="1.6" stroke-linecap="round" marker-end="url(#arw)"/>
+  <g filter="url(#sh)"><rect x="104" y="34" width="416" height="46" rx="11" fill="#1F3A60"/></g>
+  <circle cx="72" cy="57" r="15" fill="#1F3A60"/><text x="72" y="62" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">1</text>
+  <text x="126" y="62" font-size="13.5" font-weight="600" fill="#FFFFFF">Macro regime + trading calendar</text>
+  <g filter="url(#sh)"><rect x="104" y="104" width="416" height="46" rx="11" fill="#FFFFFF" stroke="#D5DEEC"/></g>
+  <circle cx="72" cy="127" r="15" fill="#1F3A60"/><text x="72" y="132" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">2</text>
+  <text x="126" y="132" font-size="13.5" font-weight="600" fill="#0F2143">Company identities + sector archetypes</text>
+  <g filter="url(#sh)"><rect x="104" y="174" width="416" height="46" rx="11" fill="#FFFFFF" stroke="#D5DEEC"/></g>
+  <circle cx="72" cy="197" r="15" fill="#1F3A60"/><text x="72" y="202" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">3</text>
+  <text x="126" y="202" font-size="13.5" font-weight="600" fill="#0F2143">Financial statements + metrics</text>
+  <g filter="url(#sh)"><rect x="104" y="244" width="416" height="46" rx="11" fill="#FFFFFF" stroke="#D5DEEC"/></g>
+  <circle cx="72" cy="267" r="15" fill="#1F3A60"/><text x="72" y="272" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">4</text>
+  <text x="126" y="272" font-size="13.5" font-weight="600" fill="#0F2143">Consensus estimates + guidance</text>
+  <g filter="url(#sh)"><rect x="104" y="314" width="416" height="46" rx="11" fill="#FFFFFF" stroke="#D5DEEC"/></g>
+  <circle cx="72" cy="337" r="15" fill="#1F3A60"/><text x="72" y="342" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">5</text>
+  <text x="126" y="342" font-size="13.5" font-weight="600" fill="#0F2143">Event timeline</text>
+  <g filter="url(#sh)"><rect x="104" y="384" width="416" height="46" rx="11" fill="#FFFFFF" stroke="#D5DEEC"/></g>
+  <circle cx="72" cy="407" r="15" fill="#1F3A60"/><text x="72" y="412" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">6</text>
+  <text x="126" y="412" font-size="13.5" font-weight="600" fill="#0F2143">OHLCV prices: market + sector + event</text>
+  <g filter="url(#sh)"><rect x="104" y="454" width="416" height="46" rx="11" fill="#FFFFFF" stroke="#D5DEEC"/></g>
+  <circle cx="72" cy="477" r="15" fill="#1F3A60"/><text x="72" y="482" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">7</text>
+  <text x="126" y="482" font-size="13.5" font-weight="600" fill="#0F2143">Grounded artifacts: news, filings, notes</text>
+  <g filter="url(#sh)"><rect x="104" y="524" width="416" height="46" rx="11" fill="#1F3A60"/></g>
+  <circle cx="72" cy="547" r="15" fill="#1F3A60"/><text x="72" y="552" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">8</text>
+  <text x="126" y="552" font-size="13.5" font-weight="600" fill="#FFFFFF">Validation report</text>
+</svg>

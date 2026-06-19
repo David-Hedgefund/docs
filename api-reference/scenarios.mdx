@@ -1,0 +1,156 @@
+---
+title: "Scenarios"
+description: "Browse, inspect, and validate the synthetic market worlds David provides."
+---
+
+Scenarios are the worlds you query. David builds and curates the full library; you browse it and pull data from any scenario. Use these endpoints to list scenarios, inspect a manifest, and read validation and quality reports. See [Scenarios](/concepts/scenarios) for the concept.
+
+<Info>
+  Scenario generation is handled by David. Every scenario in the library is pre-built, validated, and immutable, so results are reproducible across teams and runs. If you need a world with specific characteristics that the library doesn't cover, contact [investors@davidhf.com](mailto:investors@davidhf.com).
+</Info>
+
+## List scenarios
+
+```http
+GET /scenarios
+```
+
+Browse available scenarios with filters. This is usually where you start, find a `scenario_id`, then query its data.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `status` | string | - | Filter by status (e.g. `ready`). |
+| `path_mode` | enum | - | `historical_context` \| `future_branch`. |
+| `min_ticker_count` | integer | - | Only scenarios with at least this many tickers. |
+| `max_scenario_day_count` | integer | - | Only scenarios at most this many trading days. |
+| `healthy_only` | boolean | false | Only scenarios that passed validation. |
+| `limit` | integer | 20 | Page size (max 1000). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/scenarios?path_mode=future_branch&healthy_only=true&limit=5" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "scenarios": [
+    {
+      "id": "81e62b3b-17bd-5f55-b9a4-5f36ae6392f3",
+      "status": "ready",
+      "scenario_type": "earnings_week",
+      "seed": 120001,
+      "name": "Contested election and policy volatility ...",
+      "start_date": "2026-09-24",
+      "end_date": "2030-08-05",
+      "current_date": "2026-09-24",
+      "generator_version": "synthetic-finance-generator-v0.1",
+      "calibration_version": "local-calibration-v0.1",
+      "public_summary": { "scenario_theme": "election_policy_volatility", "path_mode": "future_branch", "...": "..." }
+    }
+  ]
+}
+```
+
+<Tip>
+  Filter by `dataset_split` characteristics, `path_mode`, ticker count, and horizon to assemble train / validation / test / holdout sets from the curated library, no generation required.
+</Tip>
+
+## Get a scenario
+
+```http
+GET /scenarios/{scenario_id}
+```
+
+Returns the scenario plus its `available_tickers`.
+
+```bash
+curl -s "https://api.davidhf.com/scenarios/6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "scenario": {
+    "id": "6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0",
+    "status": "ready",
+    "start_date": "1993-05-28",
+    "end_date": "2023-05-08",
+    "public_summary": {
+      "macro_regime": "inflation_shock",
+      "scenario_theme": "geopolitical_war_energy_shock",
+      "scenario_title": "War-driven energy shock: shipping-lane escalation ...",
+      "path_mode": "historical_context",
+      "market_description": "A regional war disrupts energy supply ...",
+      "agent_task": "Separate durable commodity winners from companies with temporary price spikes ...",
+      "market_mechanics": ["energy and materials gain on commodity pricing power", "..."]
+    },
+    "available_tickers": ["AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "..."]
+  }
+}
+```
+
+## Manifest
+
+```http
+GET /scenarios/{scenario_id}/manifest
+```
+
+A compact, agent-friendly description of the scenario: tickers, date range, time basis, coverage links, and the list of available endpoints.
+
+```bash
+curl -s "https://api.davidhf.com/scenarios/6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0/manifest" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "manifest": {
+    "scenario_id": "6724c7d1-...",
+    "name": "War-driven energy shock ...",
+    "tickers": ["AAPL", "MSFT", "..."],
+    "ticker_count": 16143,
+    "date_range": { "start": "1993-05-28", "end": "2023-05-08" },
+    "time_basis": {
+      "policy": "synthetic_calendar",
+      "current_date": "2023-05-08",
+      "date_semantics": "Dates are synthetic scenario-clock labels for point-in-time filtering and replay.",
+      "path_mode": "historical_context"
+    },
+    "coverage": { "source_surface_operations": 49 },
+    "available_endpoints": ["/company/facts", "/prices", "/financials/income-statements", "..."]
+  }
+}
+```
+
+## Validation report
+
+```http
+GET /scenarios/{scenario_id}/validation
+```
+
+The machine-checkable consistency report for the scenario: income-statement arithmetic, balance-sheet identity, cash reconciliation, EPS reconciliation, OHLC and volume invariants, event-day volume spikes, earnings price-reaction sign, and artifact-leakage checks. Every scenario David ships passes these checks.
+
+```bash
+curl -s "https://api.davidhf.com/scenarios/6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0/validation" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Dataset quality
+
+```http
+GET /scenarios/{scenario_id}/dataset-quality
+```
+
+Per-ticker richness and lineage audit. Verifies operating companies carry the full evidence bundle (multi-quarter earnings, filing items linked to events, news, phased analyst revisions, multi-quarter holders, diverse insider trades, corporate actions, price-event linkage) and that non-operating instruments correctly suppress issuer datasets.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `ticker` | string | null | Audit a specific ticker. |
+| `sample_limit` | integer | 5 | Tickers to sample (1–50). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/scenarios/6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0/dataset-quality?ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```

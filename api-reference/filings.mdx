@@ -1,0 +1,125 @@
+---
+title: "SEC filings"
+description: "SEC-style filings, item-level text, and filing discovery."
+---
+
+David generates SEC-style filings (10-Q, 8-K) with accession numbers, CIKs, report periods, and item sections. Filings are grouped by accession and link back to the events that produced them via `source_event_id`. Only operating companies file; ETFs and other non-operating instruments return no issuer filings.
+
+## Filings
+
+```http
+GET /filings
+```
+
+One row per synthetic filing/accession, with the item codes it contains and the assembled body text.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `filing_type` | string | all | Filter by form, e.g. `10-Q`, `8-K`. |
+| `start_date` / `end_date` | date | - | Filing-date window. |
+| `limit` | integer | 10 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/filings?scenario_id=<id>&ticker=AAPL&filing_type=10-Q" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "filings": [
+    {
+      "filing_id": "AAPL:10-Q:0000320193-26-000018",
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "filing_type": "10-Q",
+      "accession_number": "0000320193-26-000018",
+      "filing_date": "2026-04-24",
+      "report_period": "2026-03-31",
+      "url": "https://.../",
+      "title": "AAPL Form 10-Q for period ended 2026-03-31",
+      "description": "Form 10-Q synthetic SEC-style filing ...",
+      "items": ["Item-2", "Item-2.02"],
+      "item_count": 2,
+      "sections": [ { "item": "Item-2", "item_name": "MD&A", "text": "..." } ],
+      "source_event_ids": ["evt_..."],
+      "text": "AAPL Form 10-Q ...\n\nItem-2: MD&A\n..."
+    }
+  ]
+}
+```
+
+## Filing items
+
+```http
+GET /filings/items
+```
+
+Item-level text, one row per item section, for agent reading and reconciliation against the structured records.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `filing_type` | string | all | Filter by form. |
+| `item` | string | all | Filter by item code, e.g. `Item-2`. |
+| `year` | integer | all | Filter by filing year. |
+| `quarter` | integer | all | Filter by quarter (1–4). |
+| `start_date` / `end_date` | date | - | Filing-date window. |
+| `limit` | integer | 20 | Page size (max 100). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/filings/items?scenario_id=<id>&ticker=AAPL&filing_type=10-Q&item=Item-2" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "filing_items": [
+    {
+      "artifact_id": "filing_item_...",
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "filing_type": "10-Q",
+      "item": "Item-2",
+      "item_name": "MD&A",
+      "filing_date": "2026-04-24",
+      "report_period": "2026-03-31",
+      "text": "Management's discussion ...",
+      "accession_number": "0000320193-26-000018",
+      "source_event_id": "evt_...",
+      "validation": { "...": "..." }
+    }
+  ]
+}
+```
+
+## Discovery helpers
+
+```http
+GET /filings/tickers
+GET /filings/ciks
+GET /filings/types
+GET /filings/items/types
+```
+
+| Endpoint | Returns |
+| --- | --- |
+| `/filings/tickers` | Tickers with filings. |
+| `/filings/ciks` | CIKs with filings (falls back to company CIKs). |
+| `/filings/types` | Distinct filing form types (e.g. `["10-Q", "8-K"]`). |
+| `/filings/items/types` | Distinct item codes (e.g. `["Item-2", "Item-2.02"]`). |
+
+Each takes only `scenario_id`.
+
+```bash
+curl -s "https://api.davidhf.com/filings/types?scenario_id=<id>" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "filing_types": ["10-Q", "8-K"] }
+```

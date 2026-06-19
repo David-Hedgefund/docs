@@ -1,0 +1,105 @@
+---
+title: "Macro & interest rates"
+description: "The macro tape and central-bank policy rates."
+---
+
+The macro endpoints expose the scenario's economic backdrop: a daily macro tape (returns, yields, inflation expectations, credit spreads, volatility) and derived central-bank policy rates. The macro tape is **event-aware**: it marks the scenario's catalyst window and moves around it.
+
+## Macro tape
+
+```http
+GET /macro
+```
+
+The daily macro observation series for the scenario.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `start_date` / `end_date` | date | - | Inclusive window. |
+| `limit` | integer | 500 | Page size (max 10000). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/macro?scenario_id=<id>&start_date=2026-01-02" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "macro_data": [
+    {
+      "time": "2026-01-02",
+      "regime_name": "inflation_shock",
+      "market_return": -0.0008,
+      "risk_free_rate": 0.052,
+      "ten_year_yield": 0.047,
+      "inflation_expectation": 0.034,
+      "credit_spread": 0.021,
+      "volatility_index": 23.4,
+      "metadata": { "...": "..." }
+    }
+  ]
+}
+```
+
+## Interest rates
+
+```http
+GET /macro/interest-rates
+```
+
+Central-bank policy rates derived from the macro tape, expressed as stair-stepped policy decisions with target ranges and held rates (not continuous daily drift).
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `bank` | string | - | **Required.** Central-bank code (e.g. `FED`). |
+| `start_date` / `end_date` | date | - | Inclusive window. |
+
+```bash
+curl -s "https://api.davidhf.com/macro/interest-rates?scenario_id=<id>&bank=FED" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "interest_rates": [ { "bank": "FED", "effective_date": "2026-03-18", "target_low": 0.0475, "target_high": 0.0500, "decision": "hold" } ] }
+```
+
+Returns `404` for an unknown bank code.
+
+## Interest-rate snapshot
+
+```http
+GET /macro/interest-rates/snapshot
+```
+
+The latest policy rate for a bank as of a date.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `bank` | string | - | **Required.** Bank code. |
+| `as_of` | date | latest | Cutoff date. |
+
+```bash
+curl -s "https://api.davidhf.com/macro/interest-rates/snapshot?scenario_id=<id>&bank=FED&as_of=2026-03-26" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Central banks
+
+```http
+GET /macro/interest-rates/banks
+```
+
+List the available central-bank codes and names. Takes no parameters.
+
+```bash
+curl -s "https://api.davidhf.com/macro/interest-rates/banks" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "banks": [ { "bank": "FED", "name": "Federal Reserve" }, { "bank": "ECB", "name": "European Central Bank" } ] }
+```

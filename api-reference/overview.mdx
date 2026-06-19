@@ -1,0 +1,93 @@
+---
+title: "API reference overview"
+description: "Base URL, authentication, shared parameters, and response conventions."
+---
+
+The David API is a REST API that returns JSON. Every endpoint is scoped to a [scenario](/concepts/scenarios) and reads like a conventional market-data API.
+
+## Base URL
+
+```text
+https://api.davidhf.com
+```
+
+All requests go to this host over HTTPS.
+
+## Authentication
+
+Send your key in the `X-API-KEY` header on every request. See [Authentication](/authentication).
+
+```bash
+curl -s "https://api.davidhf.com/scenarios" \
+  -H "X-API-KEY: your-api-key"
+```
+
+## The `scenario_id` parameter
+
+Almost every data endpoint requires a `scenario_id` query parameter identifying the world to read from. David generates and curates the scenarios; obtain a `scenario_id` by [listing scenarios](/api-reference/scenarios#list-scenarios).
+
+```bash
+curl -s "https://api.davidhf.com/prices?scenario_id=<scenario_id>&ticker=AAPL" \
+  -H "X-API-KEY: your-api-key"
+```
+
+## Response shape
+
+Responses are JSON objects keyed by the resource name, with the payload as a list or object:
+
+```json
+{ "prices": [ { "ticker": "AAPL", "close": 183.6, "time": "2026-01-02" } ] }
+```
+
+List endpoints return their rows under a named key (`prices`, `news`, `financials`, `companies`, …). Detail endpoints return a single named object.
+
+## Shared query parameters
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `scenario_id` | string | **Required** on data endpoints. The world to read from. |
+| `ticker` | string | Symbol to filter by. Case-insensitive; normalized (e.g. `BRK.B` → `BRK-B`). |
+| `limit` | integer | Page size. Each endpoint documents its default and maximum. |
+| `offset` | integer | Number of rows to skip, for pagination. |
+| `as_of` | date | Point-in-time cutoff (`YYYY-MM-DD`). Returns only data visible on or before this date. |
+| `start_date` / `end_date` | date | Inclusive window for time-series endpoints. |
+
+See [Date semantics](/concepts/date-semantics) for how dates and visibility work.
+
+## Pagination
+
+List endpoints page with `limit` and `offset`. To walk a full result set, increase `offset` by `limit` until a short page returns:
+
+```bash
+curl -s "https://api.davidhf.com/companies?scenario_id=<id>&limit=100&offset=0" \
+  -H "X-API-KEY: your-api-key"
+curl -s "https://api.davidhf.com/companies?scenario_id=<id>&limit=100&offset=100" \
+  -H "X-API-KEY: your-api-key"
+```
+
+## Rate limits & errors
+
+Every response carries `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-Account-ID`. See [Errors & rate limits](/errors) for status codes and handling.
+
+## Endpoint groups
+
+<CardGroup cols={3}>
+  <Card title="Scenarios" icon="layer-group" href="/api-reference/scenarios" />
+  <Card title="Company" icon="building" href="/api-reference/company" />
+  <Card title="Prices" icon="chart-line" href="/api-reference/prices" />
+  <Card title="Financial statements" icon="file-invoice-dollar" href="/api-reference/financial-statements" />
+  <Card title="Financial metrics" icon="calculator" href="/api-reference/financial-metrics" />
+  <Card title="Search & screener" icon="magnifying-glass" href="/api-reference/search" />
+  <Card title="Earnings" icon="bullhorn" href="/api-reference/earnings" />
+  <Card title="KPIs & guidance" icon="gauge" href="/api-reference/kpis" />
+  <Card title="Analyst estimates" icon="chart-simple" href="/api-reference/analyst-estimates" />
+  <Card title="News & notes" icon="newspaper" href="/api-reference/news" />
+  <Card title="SEC filings" icon="folder-open" href="/api-reference/filings" />
+  <Card title="Insider trades" icon="user-secret" href="/api-reference/insider-trades" />
+  <Card title="Institutional holdings" icon="users" href="/api-reference/institutional-holdings" />
+  <Card title="Index funds" icon="object-group" href="/api-reference/index-funds" />
+  <Card title="Macro & rates" icon="building-columns" href="/api-reference/macro" />
+  <Card title="Corporate actions" icon="scissors" href="/api-reference/corporate-actions" />
+  <Card title="Sectors & events" icon="diagram-project" href="/api-reference/sectors-and-events" />
+  <Card title="Metadata" icon="circle-info" href="/api-reference/metadata" />
+</CardGroup>

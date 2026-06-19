@@ -1,0 +1,61 @@
+---
+title: "How to search SEC filings"
+description: "Find filings, drill into item-level text, and trace them to events."
+---
+
+David generates SEC-style filings (10-Q, 8-K) with item sections that link back to the events that produced them. This guide shows how to find filings and read their contents.
+
+## 1. Discover what's available
+
+```bash
+# Tickers with filings
+curl -s "https://api.davidhf.com/filings/tickers?scenario_id=<id>" -H "X-API-KEY: YOUR_API_KEY"
+
+# Filing form types present
+curl -s "https://api.davidhf.com/filings/types?scenario_id=<id>" -H "X-API-KEY: YOUR_API_KEY"
+
+# Item codes present
+curl -s "https://api.davidhf.com/filings/items/types?scenario_id=<id>" -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## 2. List filings
+
+One row per accession, with the item codes it contains:
+
+```bash
+curl -s "https://api.davidhf.com/filings?scenario_id=<id>&ticker=AAPL&filing_type=10-Q" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+Each row carries `accession_number`, `cik`, `report_period`, `items`, `source_event_ids`, and the assembled `text`.
+
+## 3. Read item-level text
+
+To get individual item sections, for example the MD&A (`Item-2`), use the items endpoint:
+
+```bash
+curl -s "https://api.davidhf.com/filings/items?scenario_id=<id>&ticker=AAPL&filing_type=10-Q&item=Item-2" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+You can also filter by `year` and `quarter`.
+
+## 4. Reconcile against the data
+
+Filing text repeats the numbers in the structured records, the same revenue and EPS that appear in [`/earnings`](/api-reference/earnings) and [`/financials`](/api-reference/financial-statements). Each item also carries a `source_event_id`, so you can trace a disclosure to the event that triggered it via [`/events/timeline`](/api-reference/sectors-and-events#event-timeline).
+
+```bash
+curl -s "https://api.davidhf.com/events/timeline?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+<Info>
+  Only operating companies file. ETFs and other non-operating instruments return no issuer filings. See [Ticker universe](/concepts/ticker-universe).
+</Info>
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="SEC filings API" icon="folder-open" href="/api-reference/filings" />
+  <Card title="News & notes" icon="newspaper" href="/api-reference/news" />
+</CardGroup>

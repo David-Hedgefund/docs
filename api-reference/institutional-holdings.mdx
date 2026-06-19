@@ -1,0 +1,84 @@
+---
+title: "Institutional holdings"
+description: "13F-style institutional holdings by ticker and by filer."
+---
+
+Institutional holdings are 13F-style position disclosures: which managers hold which tickers, how many shares, market value, portfolio weight, and quarter-over-quarter change. Each row includes a composed 13F filing text.
+
+## Holdings
+
+```http
+GET /institutional-holdings
+```
+
+Query by `ticker` (who owns it) or by `filer_cik` (what a manager owns).
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Holdings of a specific security. |
+| `filer_cik` | string | all | Holdings of a specific manager (by CIK). |
+| `report_period_gte` | date | - | Report period on or after. |
+| `report_period_lte` | date | - | Report period on or before. |
+| `limit` | integer | 50 | Page size (max 200). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/institutional-holdings?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "institutional_holdings": [
+    {
+      "id": "hold_...",
+      "manager_name": "Vanguard Group",
+      "report_period": "2026-03-31",
+      "ticker": "AAPL",
+      "shares": 1320000000,
+      "market_value": 252000000000,
+      "portfolio_weight": 0.061,
+      "change_shares": 4200000,
+      "form_type": "13F-HR",
+      "filing_date": "2026-05-15",
+      "filing_text": "Vanguard Group ... 13F-HR ...",
+      "details": { "...": "..." }
+    }
+  ]
+}
+```
+
+## Investors
+
+```http
+GET /institutional-holdings/investors
+```
+
+List the institutional managers (filers) in the scenario, with CIKs.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `scenario_id` | string | **Required.** |
+| `name` | string | Optional name filter. |
+
+```bash
+curl -s "https://api.davidhf.com/institutional-holdings/investors?scenario_id=<id>" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "investors": [ { "cik": "0000102909", "name": "Vanguard Group" } ] }
+```
+
+## Discovery helper
+
+```http
+GET /institutional-holdings/tickers
+```
+
+Takes only `scenario_id`; returns tickers with institutional holdings.
+
+```json
+{ "tickers": ["AAPL", "MSFT", "..."] }
+```

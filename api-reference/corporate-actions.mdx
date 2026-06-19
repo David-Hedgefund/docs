@@ -1,0 +1,41 @@
+---
+title: "Corporate actions"
+description: "Dividends, splits, and other corporate actions."
+---
+
+Corporate actions cover dividends, stock splits, and similar events, with announcement, ex-, record, and payable dates. Only operating companies issue corporate actions; non-operating instruments return none.
+
+## Corporate actions
+
+```http
+GET /corporate-actions
+```
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | all | Restrict to one ticker. |
+| `limit` | integer | 50 | Page size (max 200). |
+| `offset` | integer | 0 | Pagination offset. |
+
+```bash
+curl -s "https://api.davidhf.com/corporate-actions?scenario_id=<id>&ticker=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{
+  "corporate_actions": [
+    {
+      "id": "ca_...",
+      "ticker": "AAPL",
+      "action_type": "dividend",
+      "announcement_date": "2026-02-01",
+      "ex_date": "2026-02-09",
+      "record_date": "2026-02-10",
+      "payable_date": "2026-02-16",
+      "details": { "amount": 0.25, "currency": "USD" }
+    }
+  ]
+}
+```

@@ -1,0 +1,58 @@
+---
+title: "Index funds"
+description: "Index-fund constituents and look-through holdings."
+---
+
+Index-fund endpoints expose fund composition: the constituents of a fund, or, looking the other way, which funds hold a given security.
+
+## Index funds
+
+```http
+GET /index-funds
+```
+
+Query by `ticker` (the fund's holdings) **or** by `holding` (funds that hold a security), not both.
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | - | **Required.** |
+| `ticker` | string | - | A fund symbol; returns its holdings. |
+| `holding` | string | - | A security symbol; returns funds holding it. |
+| `as_of` | date | latest | Snapshot date. |
+| `limit` | integer | 50 | Page size (max 1000). |
+| `offset` | integer | 0 | Pagination offset. |
+
+<Warning>
+  Provide `ticker` **or** `holding`, not both; passing both returns `400`.
+</Warning>
+
+```bash
+# Holdings of an index fund
+curl -s "https://api.davidhf.com/index-funds?scenario_id=<id>&ticker=SPY" \
+  -H "X-API-KEY: YOUR_API_KEY"
+
+# Funds that hold a security
+curl -s "https://api.davidhf.com/index-funds?scenario_id=<id>&holding=AAPL" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+## Discovery helper
+
+```http
+GET /index-funds/tickers
+```
+
+Returns the available index-fund tickers. Takes no parameters.
+
+```bash
+curl -s "https://api.davidhf.com/index-funds/tickers" \
+  -H "X-API-KEY: YOUR_API_KEY"
+```
+
+```json
+{ "tickers": ["SPY", "QQQ", "IWM", "DIA", "..."] }
+```
+
+<Info>
+  Index funds are non-operating instruments: they serve prices, fund-flow news, holdings, and metadata, but no issuer financials. For `SPY`, the ETF share price is reported separately from the S&P 500 benchmark level. See [Ticker universe](/concepts/ticker-universe).
+</Info>

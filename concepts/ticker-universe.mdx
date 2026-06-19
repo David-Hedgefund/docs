@@ -1,0 +1,69 @@
+---
+title: "Ticker universe"
+description: "Real symbol aliases, instrument types, and which datasets each one serves."
+---
+
+David uses **real exchange-style ticker symbols** as identifiers so your existing ticker lists, watchlists, and tooling work without translation. The data behind each symbol is synthetic (see [Synthetic data](/concepts/synthetic-data)), but the symbol itself, `AAPL`, `NVDA`, `SPY`, is real.
+
+## Symbol normalization
+
+Yahoo-style symbol forms are normalized automatically. For example `BRK.B` is accepted and resolved to `BRK-B`. Tickers are matched case-insensitively and uppercased in responses.
+
+## Operating companies vs. non-operating instruments
+
+David models two distinct kinds of listed entity, and they expose **different datasets**. This is intentional: an ETF has no income statement, so David returns an empty list rather than fabricating one.
+
+<CardGroup cols={2}>
+  <Card title="Operating companies" icon="building">
+    Full issuer surface: financial statements, metrics, earnings, guidance, analyst estimates, issuer SEC filings, corporate actions, insider trades, plus prices, news, events, and holdings.
+  </Card>
+  <Card title="Non-operating instruments" icon="layer-group">
+    ETFs, closed-end funds, ETNs, warrants, units, rights, and preferred/depositary shares. They serve prices, benchmark/fund-flow news, instrument repricing events, instrument metadata, and holdings, but **not** issuer financials.
+  </Card>
+</CardGroup>
+
+### What non-operating instruments suppress
+
+For tickers such as `SPY`, `QQQ`, `IWM`, `DIA`, `TLT`, `GLD`, closed-end funds, ETNs, warrants, units, rights, and preferred/depositary shares, the following operating-company datasets return **empty lists**:
+
+- Financial statements (`/financials/*`)
+- Earnings and earnings calendar
+- KPI guidance and operating analyst estimates
+- Issuer SEC-style filings
+- Corporate actions
+- Insider trades
+
+They still serve: prices, benchmark/fund-flow news, instrument repricing events, benchmark/underlying metadata, and holdings.
+
+<Info>
+  For `SPY`, David reports the **ETF share-price reference** separately from the **S&P 500 benchmark level**, so agents never confuse the fund's price with the index level.
+</Info>
+
+## Company reference identity
+
+Display identity (name, sector, industry, business description, employees, market-cap tier, reference price, and instrument type) is sourced from **yfinance** and cached, not hand-curated. Major companies and ETFs have explicit overrides; the long tail falls back to name-based classification. A symbol with no yfinance data is left `Unclassified` rather than assigned a fabricated sector.
+
+## Discovering tickers
+
+Most datasets expose helper endpoints that list the tickers actually present in a scenario, so you don't have to guess:
+
+| Endpoint | Returns |
+| --- | --- |
+| `GET /scenarios/{id}` | `available_tickers` for the scenario |
+| `GET /company/facts/tickers` | Tickers with company facts |
+| `GET /prices/tickers` | Tickers with price data |
+| `GET /earnings/tickers` | Tickers with earnings |
+| `GET /filings/tickers` | Tickers with filings |
+| `GET /institutional-holdings/tickers` | Tickers with 13F-style holdings |
+| `GET /kpi/metrics/tickers` | Tickers with KPI metrics |
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Company API" icon="building" href="/api-reference/company">
+    Facts, search, and identity endpoints.
+  </Card>
+  <Card title="Index funds API" icon="layer-group" href="/api-reference/index-funds">
+    Fund constituents and look-through holdings.
+  </Card>
+</CardGroup>
