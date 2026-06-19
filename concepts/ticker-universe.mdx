@@ -41,7 +41,7 @@ They still serve: prices, benchmark/fund-flow news, instrument repricing events,
 
 ## Company reference identity
 
-Display identity (name, sector, industry, business description, employees, market-cap tier, reference price, and instrument type) is sourced from **yfinance** and cached in the `company_reference` table, not hand-curated. Instrument type (ETF, warrant, unit, right, preferred share, and similar) is detected from the symbol and company name.
+Beyond the symbol, each company's display identity (name, sector, industry, exchange, and instrument type) reflects the real-world company, so listings read naturally: `AAPL` is Apple, `SPY` is an S&P 500 ETF. Only the prices, fundamentals, and other data behind each symbol are synthetic.
 
 ## Discovering tickers
 
