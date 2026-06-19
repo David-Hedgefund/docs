@@ -121,8 +121,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/david_data_logo_navy_transparent.svg",
-    "dark": "/logo/david_data_logo_white_transparent.svg"
+    "light": "/logo/david-wordmark-navy.png",
+    "dark": "/logo/david-wordmark-white.png"
   },
   "navbar": {
     "links": [
