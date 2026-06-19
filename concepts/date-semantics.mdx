@@ -19,7 +19,7 @@ Each scenario has its own clock defined by `start_date`, `end_date`, and `curren
 In both cases, the generated issuer values are synthetic; the dates are labels for ordering, visibility, and replay, not claims about what really happened on that calendar date.
 
 <Info>
-  A scenario's manifest exposes a `time_basis` block with `date_semantics`, `path_mode`, and `path_mode_description` so agents can reason about the clock correctly. See [`GET /scenarios/{id}/manifest`](/api-reference/scenarios#manifest).
+  A scenario's `public_summary` exposes `date_semantics`, `path_mode`, and `path_mode_description` so agents can reason about the clock correctly. See [`GET /scenarios/{id}`](/api-reference/scenarios#get-a-scenario).
 </Info>
 
 ## Visibility and leakage control
