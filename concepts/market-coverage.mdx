@@ -1,15 +1,17 @@
 ---
 title: "Market coverage"
-description: "Universe size, scenario horizons, and scale presets."
+description: "Universe size, scenario horizons, and endpoint coverage."
 ---
 
 David is designed to mirror the breadth of a real market-data vendor while remaining fully synthetic.
 
 ## Universe size
 
-- The universe contains **16,143 unique public US symbols** drawn from SEC/Nasdaq snapshots.
-- The scale target is **27,000 active and delisted US tickers** per scenario, matching a full licensed universe.
-- Each scenario in the library addresses up to **16,143 real ticker aliases**.
+David covers **16,143 real public US symbols**, sourced from SEC and Nasdaq listings, and every scenario can address the full set.
+
+<Info>
+  Company facts, prices, fundamentals, filings, news, events, and ownership are generated deterministically from the scenario and ticker, giving broad real-symbol coverage across the universe.
+</Info>
 
 ## Horizons
 
@@ -24,20 +26,6 @@ Scenarios deliberately mix time horizons rather than forcing one length:
 
 A scenario's actual span is given by its `start_date` and `end_date`. Trading days are synthetic calendar days. See [Date semantics](/concepts/date-semantics).
 
-## Scale presets
-
-David defines presets that trade off scenario count, ticker count, and horizon. Fetch them live via [`GET /metadata/scale-presets`](/api-reference/metadata#scale-presets).
-
-| Preset | Scenarios | Tickers | Span |
-| --- | --- | --- | --- |
-| Library | 720 | real aliases | mixed horizons |
-| Research panel | 250 | 1,000 | ~3 years |
-| Full scale | 1,000 | 27,000 | ~30 years |
-
-<Info>
-  Company facts, prices, fundamentals, filings, news, events, and ownership are generated deterministically from the scenario/ticker seed, giving broad real-symbol coverage across the universe.
-</Info>
-
 ## Coverage map
 
 David implements a Financial Datasets–style endpoint surface, native endpoints plus derived compatibility views (as-reported statements, segments, screeners, KPI/non-GAAP metrics, index funds, interest rates, market snapshots). The live coverage map is available at [`GET /metadata/financial-datasets-coverage`](/api-reference/metadata#financial-datasets-coverage).
@@ -49,6 +37,6 @@ David implements a Financial Datasets–style endpoint surface, native endpoints
     Instrument types and which datasets each one serves.
   </Card>
   <Card title="Metadata API" icon="code" href="/api-reference/metadata">
-    Coverage, presets, themes, and audits.
+    Coverage, themes, and audits.
   </Card>
 </CardGroup>
