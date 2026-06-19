@@ -13,15 +13,15 @@ GET /institutional-holdings
 
 Query by `ticker` (who owns it) or by `filer_cik` (what a manager owns).
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Holdings of a specific security. |
-| `filer_cik` | string | all | Holdings of a specific manager (by CIK). |
-| `report_period_gte` | date | - | Report period on or after. |
-| `report_period_lte` | date | - | Report period on or before. |
-| `limit` | integer | 50 | Page size (max 200). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Holdings of a specific security. |
+| `filer_cik` | string | No | all | Holdings of a specific manager (by CIK). |
+| `report_period_gte` | date | No | - | Report period on or after. |
+| `report_period_lte` | date | No | - | Report period on or before. |
+| `limit` | integer | No | 50 | Page size (max 200). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/institutional-holdings?scenario_id=<id>&ticker=AAPL" \
@@ -57,10 +57,10 @@ GET /institutional-holdings/investors
 
 List the institutional managers (filers) in the scenario, with CIKs.
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `scenario_id` | string | **Required.** |
-| `name` | string | Optional name filter. |
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | Yes | The world to read from. |
+| `name` | string | No | Optional name filter. |
 
 ```bash
 curl -s "https://api.davidhf.com/institutional-holdings/investors?scenario_id=<id>" \

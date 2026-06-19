@@ -13,16 +13,16 @@ GET /prices
 
 Daily OHLCV bars for a ticker within an optional date window.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | - | **Required.** |
-| `interval` | string | `day` | Only `day` is supported; other values return `400`. |
-| `start_date` | date | - | Inclusive window start. |
-| `end_date` | date | - | Inclusive window end. |
-| `include_components` | boolean | false | Include return-decomposition fields (see below). |
-| `limit` | integer | 5000 | Max bars (max 10000). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | Yes | - | Ticker symbol to query. |
+| `interval` | string | No | `day` | Only `day` is supported; other values return `400`. |
+| `start_date` | date | No | - | Inclusive window start. |
+| `end_date` | date | No | - | Inclusive window end. |
+| `include_components` | boolean | No | false | Include return-decomposition fields (see below). |
+| `limit` | integer | No | 5000 | Max bars (max 10000). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/prices?scenario_id=<id>&ticker=AAPL&interval=day&start_date=2026-01-02&end_date=2026-03-27" \
@@ -60,11 +60,11 @@ GET /prices/snapshot
 
 The single bar visible as of a date, useful for point-in-time valuation.
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `scenario_id` | string | **Required.** |
-| `ticker` | string | **Required.** |
-| `as_of` | date | **Required.** Cutoff date. |
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | Yes | The world to read from. |
+| `ticker` | string | Yes | Ticker symbol to query. |
+| `as_of` | date | Yes | Cutoff date. |
 
 ```bash
 curl -s "https://api.davidhf.com/prices/snapshot?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" \
@@ -85,12 +85,12 @@ GET /prices/snapshot/market
 
 A market-wide snapshot across many tickers as of a date.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `as_of` | date | latest | Cutoff date. |
-| `limit` | integer | 500 | Tickers (max 5000). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `as_of` | date | No | latest | Cutoff date. |
+| `limit` | integer | No | 500 | Tickers (max 5000). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/prices/snapshot/market?scenario_id=<id>&as_of=2026-03-26" \

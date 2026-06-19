@@ -11,13 +11,13 @@ Analyst estimates capture the sell-side view: per-firm estimates, ratings, price
 GET /analyst-estimates
 ```
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | - | **Required.** |
-| `as_of` | date | latest | Return only estimates visible on or before this date. |
-| `limit` | integer | 50 | Page size (max 200). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | Yes | - | Ticker symbol to query. |
+| `as_of` | date | No | latest | Return only estimates visible on or before this date. |
+| `limit` | integer | No | 50 | Page size (max 200). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/analyst-estimates?scenario_id=<id>&ticker=AAPL&as_of=2026-03-27" \

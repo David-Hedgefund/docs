@@ -13,9 +13,9 @@ GET /metadata/sectors
 
 Sector metadata for the scenario: descriptions, regime, and factor exposures.
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `scenario_id` | string | **Required.** |
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | Yes | The world to read from. |
 
 ```bash
 curl -s "https://api.davidhf.com/metadata/sectors?scenario_id=<id>" \
@@ -44,15 +44,15 @@ GET /events/timeline
 
 The public event sequence for the scenario, earnings, macro catalysts, and idiosyncratic events. Events carry a `visible_from` so an `as_of` query returns only what was known at the time. Hidden effects are never exposed publicly.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Restrict to one ticker. |
-| `as_of` | date | - | Point-in-time cutoff. |
-| `event_type` | string | all | Filter by event type. |
-| `start_date` / `end_date` | date | - | Inclusive window. |
-| `limit` | integer | 100 | Page size (max 500). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Restrict to one ticker. |
+| `as_of` | date | No | - | Point-in-time cutoff. |
+| `event_type` | string | No | all | Filter by event type. |
+| `start_date` / `end_date` | date | No | - | Inclusive window. |
+| `limit` | integer | No | 100 | Page size (max 500). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/events/timeline?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" \

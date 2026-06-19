@@ -13,13 +13,13 @@ GET /financial-metrics
 
 Time series of metrics for a single ticker.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | - | **Required.** |
-| `period` | string | `ttm` | `ttm` \| `quarterly` \| `annual`. |
-| `limit` | integer | 4 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | Yes | - | Ticker symbol to query. |
+| `period` | string | No | `ttm` | `ttm` \| `quarterly` \| `annual`. |
+| `limit` | integer | No | 4 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/financial-metrics?scenario_id=<id>&ticker=AAPL&period=ttm&limit=4" \
@@ -55,13 +55,13 @@ GET /financial-metrics/snapshot
 
 A point-in-time metrics snapshot across one or many tickers, joined with the price as of a date.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Restrict to one ticker. |
-| `as_of` | date | latest | Price-snapshot cutoff. |
-| `limit` | integer | 100 | Tickers (max 5000). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Restrict to one ticker. |
+| `as_of` | date | No | latest | Price-snapshot cutoff. |
+| `limit` | integer | No | 100 | Tickers (max 5000). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/financial-metrics/snapshot?scenario_id=<id>&as_of=2026-03-26&limit=50" \

@@ -80,9 +80,9 @@ GET /metadata/empirical-calibration
 
 The calibration manifest: stylized-fact gates (volatility, kurtosis, clustering, drawdown, tails, coverage) and current margins against measured market panels.
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `panel_path` | string | Optional path to a calibration panel to evaluate against. |
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `panel_path` | string | No | Optional path to a calibration panel to evaluate against. |
 
 ```bash
 curl -s "https://api.davidhf.com/metadata/empirical-calibration" \

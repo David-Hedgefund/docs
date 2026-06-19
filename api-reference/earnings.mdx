@@ -13,12 +13,12 @@ GET /earnings
 
 Earnings results for a ticker (or across the scenario when `ticker` is omitted).
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Restrict to one ticker. |
-| `limit` | integer | 4 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Restrict to one ticker. |
+| `limit` | integer | No | 4 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/earnings?scenario_id=<id>&ticker=AAPL" \
@@ -55,12 +55,12 @@ GET /earnings/calendar
 
 Upcoming/known earnings dates for a ticker.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | - | **Required.** |
-| `limit` | integer | 20 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | Yes | - | Ticker symbol to query. |
+| `limit` | integer | No | 20 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/earnings/calendar?scenario_id=<id>&ticker=AAPL" \

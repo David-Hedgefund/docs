@@ -13,14 +13,14 @@ GET /filings
 
 One row per synthetic filing/accession, with the item codes it contains and the assembled body text.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Restrict to one ticker. |
-| `filing_type` | string | all | Filter by form, e.g. `10-Q`, `8-K`. |
-| `start_date` / `end_date` | date | - | Filing-date window. |
-| `limit` | integer | 10 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Restrict to one ticker. |
+| `filing_type` | string | No | all | Filter by form, e.g. `10-Q`, `8-K`. |
+| `start_date` / `end_date` | date | No | - | Filing-date window. |
+| `limit` | integer | No | 10 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/filings?scenario_id=<id>&ticker=AAPL&filing_type=10-Q" \
@@ -59,17 +59,17 @@ GET /filings/items
 
 Item-level text, one row per item section, for agent reading and reconciliation against the structured records.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Restrict to one ticker. |
-| `filing_type` | string | all | Filter by form. |
-| `item` | string | all | Filter by item code, e.g. `Item-2`. |
-| `year` | integer | all | Filter by filing year. |
-| `quarter` | integer | all | Filter by quarter (1–4). |
-| `start_date` / `end_date` | date | - | Filing-date window. |
-| `limit` | integer | 20 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Restrict to one ticker. |
+| `filing_type` | string | No | all | Filter by form. |
+| `item` | string | No | all | Filter by item code, e.g. `Item-2`. |
+| `year` | integer | No | all | Filter by filing year. |
+| `quarter` | integer | No | all | Filter by quarter (1–4). |
+| `start_date` / `end_date` | date | No | - | Filing-date window. |
+| `limit` | integer | No | 20 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/filings/items?scenario_id=<id>&ticker=AAPL&filing_type=10-Q&item=Item-2" \

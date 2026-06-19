@@ -13,13 +13,13 @@ GET /kpi/guidance
 
 Management guidance ranges and point estimates by metric and period.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | - | **Required.** |
-| `period` | string | all | Filter by guidance period label. |
-| `limit` | integer | 10 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | Yes | - | Ticker symbol to query. |
+| `period` | string | No | all | Filter by guidance period label. |
+| `limit` | integer | No | 10 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/kpi/guidance?scenario_id=<id>&ticker=AAPL" \
@@ -55,13 +55,13 @@ GET /kpi/metrics
 
 Sector-aware operating KPIs derived from each period's statements.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | - | **Required.** |
-| `period` | string | `quarterly` | `quarterly` \| `annual`. |
-| `limit` | integer | 8 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | Yes | - | Ticker symbol to query. |
+| `period` | string | No | `quarterly` | `quarterly` \| `annual`. |
+| `limit` | integer | No | 8 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/kpi/metrics?scenario_id=<id>&ticker=AAPL" \
@@ -76,13 +76,13 @@ GET /kpi/non-gaap
 
 Non-GAAP metrics and their reconciliation to GAAP for each period.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | - | **Required.** |
-| `period` | string | `quarterly` | `quarterly` \| `annual`. |
-| `limit` | integer | 8 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | Yes | - | Ticker symbol to query. |
+| `period` | string | No | `quarterly` | `quarterly` \| `annual`. |
+| `limit` | integer | No | 8 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/kpi/non-gaap?scenario_id=<id>&ticker=AAPL" \

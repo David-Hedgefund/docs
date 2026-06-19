@@ -13,12 +13,12 @@ GET /macro
 
 The daily macro observation series for the scenario.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `start_date` / `end_date` | date | - | Inclusive window. |
-| `limit` | integer | 500 | Page size (max 10000). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `start_date` / `end_date` | date | No | - | Inclusive window. |
+| `limit` | integer | No | 500 | Page size (max 10000). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/macro?scenario_id=<id>&start_date=2026-01-02" \
@@ -51,11 +51,11 @@ GET /macro/interest-rates
 
 Central-bank policy rates derived from the macro tape, expressed as stair-stepped policy decisions with target ranges and held rates (not continuous daily drift).
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `bank` | string | - | **Required.** Central-bank code (e.g. `FED`). |
-| `start_date` / `end_date` | date | - | Inclusive window. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `bank` | string | Yes | - | Central-bank code (e.g. `FED`). |
+| `start_date` / `end_date` | date | No | - | Inclusive window. |
 
 ```bash
 curl -s "https://api.davidhf.com/macro/interest-rates?scenario_id=<id>&bank=FED" \
@@ -76,11 +76,11 @@ GET /macro/interest-rates/snapshot
 
 The latest policy rate for a bank as of a date.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `bank` | string | - | **Required.** Bank code. |
-| `as_of` | date | latest | Cutoff date. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `bank` | string | Yes | - | Bank code. |
+| `as_of` | date | No | latest | Cutoff date. |
 
 ```bash
 curl -s "https://api.davidhf.com/macro/interest-rates/snapshot?scenario_id=<id>&bank=FED&as_of=2026-03-26" \

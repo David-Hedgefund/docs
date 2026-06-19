@@ -30,13 +30,13 @@ POST /financials/search/screener
 
 Rank and filter companies by financial metrics. Send a JSON body.
 
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `tickers` | string[] | all | Restrict the search universe. |
-| `period` | string | `ttm` | Metric period. |
-| `limit` | integer | 100 | Max results. |
-| `filters` | object | `{}` | Map of metric → comparator. Comparators: `gt`, `gte`, `lt`, `lte`, `eq`. |
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `tickers` | string[] | No | all | Restrict the search universe. |
+| `period` | string | No | `ttm` | Metric period. |
+| `limit` | integer | No | 100 | Max results. |
+| `filters` | object | No | `{}` | Map of metric → comparator. Comparators: `gt`, `gte`, `lt`, `lte`, `eq`. |
 
 ```bash
 curl -s -X POST "https://api.davidhf.com/financials/search/screener" \
@@ -64,13 +64,13 @@ POST /financials/search/line-items
 
 Extract specific statement line items across tickers, handy for building feature tables.
 
-| Field | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `tickers` | string[] | all | Restrict the universe. |
-| `period` | string | `quarterly` | Statement period. |
-| `limit` | integer | 100 | Max rows. |
-| `line_items` | string[] | - | Line items to extract, e.g. `["revenue", "net_income"]`. |
+| Field | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `tickers` | string[] | No | all | Restrict the universe. |
+| `period` | string | No | `quarterly` | Statement period. |
+| `limit` | integer | No | 100 | Max rows. |
+| `line_items` | string[] | No | - | Line items to extract, e.g. `["revenue", "net_income"]`. |
 
 ```bash
 curl -s -X POST "https://api.davidhf.com/financials/search/line-items" \

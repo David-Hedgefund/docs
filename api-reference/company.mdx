@@ -13,11 +13,11 @@ GET /company/facts
 
 Returns facts for a single company by `ticker` or `cik`.
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `scenario_id` | string | **Required.** |
-| `ticker` | string | Symbol to look up. |
-| `cik` | string | CIK to look up (alternative to `ticker`). |
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | Yes | The world to read from. |
+| `ticker` | string | No | Symbol to look up. |
+| `cik` | string | No | CIK to look up (alternative to `ticker`). |
 
 ```bash
 curl -s "https://api.davidhf.com/company/facts?scenario_id=<id>&ticker=AAPL" \
@@ -54,13 +54,13 @@ GET /companies
 
 List or search companies in a scenario.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | - | Filter to a single ticker. |
-| `search` | string | - | Free-text search over name, sector, industry, or ticker (≤128 chars). |
-| `limit` | integer | 100 | Page size (max 5000). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | - | Filter to a single ticker. |
+| `search` | string | No | - | Free-text search over name, sector, industry, or ticker (≤128 chars). |
+| `limit` | integer | No | 100 | Page size (max 5000). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/companies?scenario_id=<id>&search=semiconductor&limit=25" \

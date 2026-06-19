@@ -11,16 +11,16 @@ Insider trades are Form 4–style transactions by company insiders: purchases, s
 GET /insider-trades
 ```
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Restrict to one ticker. |
-| `name` | string | all | Filter by insider name. |
-| `transaction_type` | string | all | Filter by type (e.g. `buy`, `sell`). |
-| `filing_date_gte` | date | - | Filed on or after. |
-| `filing_date_lte` | date | - | Filed on or before. |
-| `limit` | integer | 10 | Page size (max 200). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Restrict to one ticker. |
+| `name` | string | No | all | Filter by insider name. |
+| `transaction_type` | string | No | all | Filter by type (e.g. `buy`, `sell`). |
+| `filing_date_gte` | date | No | - | Filed on or after. |
+| `filing_date_lte` | date | No | - | Filed on or before. |
+| `limit` | integer | No | 10 | Page size (max 200). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/insider-trades?scenario_id=<id>&ticker=AAPL&transaction_type=sell&filing_date_gte=2026-01-01" \
@@ -55,12 +55,12 @@ GET /insider-transactions
 
 The simpler list form: same row shape, fewer filters.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Restrict to one ticker. |
-| `limit` | integer | 50 | Page size (max 200). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Restrict to one ticker. |
+| `limit` | integer | No | 50 | Page size (max 200). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/insider-transactions?scenario_id=<id>&ticker=AAPL" \

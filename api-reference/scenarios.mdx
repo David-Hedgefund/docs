@@ -17,15 +17,15 @@ GET /scenarios
 
 Browse available scenarios with filters. This is usually where you start, find a `scenario_id`, then query its data.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `status` | string | - | Filter by status (e.g. `ready`). |
-| `path_mode` | enum | - | `historical_context` \| `future_branch`. |
-| `min_ticker_count` | integer | - | Only scenarios with at least this many tickers. |
-| `max_scenario_day_count` | integer | - | Only scenarios at most this many trading days. |
-| `healthy_only` | boolean | false | Only scenarios that passed validation. |
-| `limit` | integer | 20 | Page size (max 1000). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `status` | string | No | - | Filter by status (e.g. `ready`). |
+| `path_mode` | enum | No | - | `historical_context` \| `future_branch`. |
+| `min_ticker_count` | integer | No | - | Only scenarios with at least this many tickers. |
+| `max_scenario_day_count` | integer | No | - | Only scenarios at most this many trading days. |
+| `healthy_only` | boolean | No | false | Only scenarios that passed validation. |
+| `limit` | integer | No | 20 | Page size (max 1000). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/scenarios?path_mode=future_branch&healthy_only=true&limit=5" \

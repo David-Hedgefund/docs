@@ -13,14 +13,14 @@ GET /news
 
 Returns both company news (`news_article`) and market news (`market_news_article`).
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Restrict to one ticker. |
-| `as_of` | date | - | Point-in-time cutoff, only articles visible on or before this date. |
-| `start_date` / `end_date` | date | - | Inclusive window. |
-| `limit` | integer | 10 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Restrict to one ticker. |
+| `as_of` | date | No | - | Point-in-time cutoff, only articles visible on or before this date. |
+| `start_date` / `end_date` | date | No | - | Inclusive window. |
+| `limit` | integer | No | 10 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/news?scenario_id=<id>&ticker=AAPL&as_of=2026-03-20" \
@@ -61,10 +61,10 @@ GET /news/{artifact_id}
 
 Returns a single article with the full multi-paragraph `text` and validation metadata.
 
-| Parameter | Type | Description |
-| --- | --- | --- |
-| `scenario_id` | string | **Required.** |
-| `artifact_id` | string | The article id (path parameter). |
+| Parameter | Type | Required | Description |
+| --- | --- | --- | --- |
+| `scenario_id` | string | Yes | The world to read from. |
+| `artifact_id` | string | No | The article id (path parameter). |
 
 ```bash
 curl -s "https://api.davidhf.com/news/news_abc123?scenario_id=<id>" \
@@ -85,14 +85,14 @@ GET /analyst-notes
 
 Full-text sell-side notes (`analyst_note`), including the body text.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | all | Restrict to one ticker. |
-| `as_of` | date | - | Point-in-time cutoff. |
-| `start_date` / `end_date` | date | - | Inclusive window. |
-| `limit` | integer | 10 | Page size (max 100). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | all | Restrict to one ticker. |
+| `as_of` | date | No | - | Point-in-time cutoff. |
+| `start_date` / `end_date` | date | No | - | Inclusive window. |
+| `limit` | integer | No | 10 | Page size (max 100). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 ```bash
 curl -s "https://api.davidhf.com/analyst-notes?scenario_id=<id>&ticker=AAPL&as_of=2026-03-20" \

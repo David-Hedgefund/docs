@@ -13,14 +13,14 @@ GET /index-funds
 
 Query by `ticker` (the fund's holdings) **or** by `holding` (funds that hold a security), not both.
 
-| Parameter | Type | Default | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | - | **Required.** |
-| `ticker` | string | - | A fund symbol; returns its holdings. |
-| `holding` | string | - | A security symbol; returns funds holding it. |
-| `as_of` | date | latest | Snapshot date. |
-| `limit` | integer | 50 | Page size (max 1000). |
-| `offset` | integer | 0 | Pagination offset. |
+| Parameter | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `scenario_id` | string | Yes | - | The world to read from. |
+| `ticker` | string | No | - | A fund symbol; returns its holdings. |
+| `holding` | string | No | - | A security symbol; returns funds holding it. |
+| `as_of` | date | No | latest | Snapshot date. |
+| `limit` | integer | No | 50 | Page size (max 1000). |
+| `offset` | integer | No | 0 | Pagination offset. |
 
 <Warning>
   Provide `ticker` **or** `holding`, not both; passing both returns `400`.
