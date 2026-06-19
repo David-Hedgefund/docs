@@ -8,7 +8,7 @@
     "light": "#6C8CC7",
     "dark": "#142A4A"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
   "navigation": {
     "tabs": [
       {
@@ -121,8 +121,8 @@
     ]
   },
   "logo": {
-    "light": "/logo/slingshot-black.png",
-    "dark": "/logo/slingshot-white.png"
+    "light": "/logo/david_data_logo_navy_transparent.svg",
+    "dark": "/logo/david_data_logo_white_transparent.svg"
   },
   "navbar": {
     "links": [
