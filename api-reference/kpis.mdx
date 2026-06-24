@@ -21,10 +21,16 @@ Management guidance ranges and point estimates by metric and period.
 | `limit` | integer | No | 10 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/kpi/guidance?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.kpi_guidance("AAPL", scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 {
@@ -63,10 +69,16 @@ Sector-aware operating KPIs derived from each period's statements.
 | `limit` | integer | No | 8 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/kpi/metrics?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.kpi_metrics("AAPL", scenario_id="<id>")
+```
+</CodeGroup>
 
 ## Non-GAAP
 
@@ -84,10 +96,16 @@ Non-GAAP metrics and their reconciliation to GAAP for each period.
 | `limit` | integer | No | 8 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/kpi/non-gaap?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.kpi_non_gaap("AAPL", scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 { "non_gaap": [ { "ticker": "AAPL", "report_period": "2026-03-31", "adjusted_eps": 2.31, "...": "..." } ] }

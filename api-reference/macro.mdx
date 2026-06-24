@@ -20,10 +20,16 @@ The daily macro observation series for the scenario.
 | `limit` | integer | No | 500 | Page size (max 10000). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/macro?scenario_id=<id>&start_date=2026-01-02" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.macro.series(scenario_id="<id>", start_date="2026-01-02")
+```
+</CodeGroup>
 
 ```json
 {
@@ -57,10 +63,16 @@ Central-bank policy rates derived from the macro tape, expressed as stair-steppe
 | `bank` | string | Yes | - | Central-bank code (e.g. `FED`). |
 | `start_date` / `end_date` | date | No | - | Inclusive window. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/macro/interest-rates?scenario_id=<id>&bank=FED" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.macro.interest_rates("FED", scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 { "interest_rates": [ { "bank": "FED", "effective_date": "2026-03-18", "target_low": 0.0475, "target_high": 0.0500, "decision": "hold" } ] }
@@ -82,10 +94,16 @@ The latest policy rate for a bank as of a date.
 | `bank` | string | Yes | - | Bank code. |
 | `as_of` | date | No | latest | Cutoff date. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/macro/interest-rates/snapshot?scenario_id=<id>&bank=FED&as_of=2026-03-26" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.macro.interest_rate_snapshot("FED", scenario_id="<id>", as_of="2026-03-26")
+```
+</CodeGroup>
 
 ## Central banks
 
@@ -95,10 +113,16 @@ GET /macro/interest-rates/banks
 
 List the available central-bank codes and names. Takes no parameters.
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/macro/interest-rates/banks" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.macro.banks()
+```
+</CodeGroup>
 
 ```json
 { "banks": [ { "bank": "FED", "name": "Federal Reserve" }, { "bank": "ECB", "name": "European Central Bank" } ] }

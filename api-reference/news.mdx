@@ -22,10 +22,16 @@ Returns both company news (`news_article`) and market news (`market_news_article
 | `limit` | integer | No | 10 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/news?scenario_id=<id>&ticker=AAPL&as_of=2026-03-20" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.news.list(scenario_id="<id>", ticker="AAPL", as_of="2026-03-20")
+```
+</CodeGroup>
 
 ```json
 {
@@ -66,10 +72,16 @@ Returns a single article with the full multi-paragraph `text` and validation met
 | `scenario_id` | string | Yes | The world to read from. |
 | `artifact_id` | string | No | The article id (path parameter). |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/news/news_abc123?scenario_id=<id>" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.news.get("news_abc123", scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 { "news_article": { "artifact_id": "news_abc123", "text": "Apple today reported ...", "validation": { "...": "..." } } }
@@ -94,10 +106,16 @@ Full-text sell-side notes (`analyst_note`), including the body text.
 | `limit` | integer | No | 10 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/analyst-notes?scenario_id=<id>&ticker=AAPL&as_of=2026-03-20" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.analyst.notes(scenario_id="<id>", ticker="AAPL", as_of="2026-03-20")
+```
+</CodeGroup>
 
 ```json
 { "analyst_notes": [ { "artifact_id": "note_...", "ticker": "AAPL", "title": "Reiterate Overweight", "text": "...", "sentiment": "positive" } ] }

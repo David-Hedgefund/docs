@@ -26,7 +26,8 @@ Query by `ticker` (the fund's holdings) **or** by `holding` (funds that hold a s
   Provide `ticker` **or** `holding`, not both; passing both returns `400`.
 </Warning>
 
-```bash
+<CodeGroup>
+```bash cURL
 # Holdings of an index fund
 curl -s "https://api.davidhf.com/index-funds?scenario_id=<id>&ticker=SPY" \
   -H "X-API-KEY: YOUR_API_KEY"
@@ -36,6 +37,12 @@ curl -s "https://api.davidhf.com/index-funds?scenario_id=<id>&holding=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
 
+```python Python
+dd.index_funds.list(scenario_id="<id>", ticker="SPY")
+dd.index_funds.list(scenario_id="<id>", holding="AAPL")
+```
+</CodeGroup>
+
 ## Discovery helper
 
 ```http
@@ -44,10 +51,16 @@ GET /index-funds/tickers
 
 Returns the available index-fund tickers. Takes no parameters.
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/index-funds/tickers" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.index_funds.tickers()
+```
+</CodeGroup>
 
 ```json
 { "tickers": ["SPY", "QQQ", "IWM", "DIA", "..."] }

@@ -27,10 +27,16 @@ Browse available scenarios with filters. This is usually where you start, find a
 | `limit` | integer | No | 20 | Page size (max 1000). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/scenarios?path_mode=future_branch&healthy_only=true&limit=5" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.scenarios.list(path_mode="future_branch", healthy_only=True, limit=5)
+```
+</CodeGroup>
 
 ```json
 {
@@ -64,10 +70,16 @@ GET /scenarios/{scenario_id}
 
 Returns the scenario plus its `available_tickers`.
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/scenarios/6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.scenarios.get("6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0")
+```
+</CodeGroup>
 
 ```json
 {
@@ -98,7 +110,13 @@ GET /scenarios/{scenario_id}/validation
 
 The machine-checkable consistency report for the scenario: income-statement arithmetic, balance-sheet identity, cash reconciliation, EPS reconciliation, OHLC and volume invariants, event-day volume spikes, earnings price-reaction sign, and artifact-leakage checks. Every scenario David ships passes these checks.
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/scenarios/6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0/validation" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.scenarios.validation("6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0")
+```
+</CodeGroup>

@@ -24,10 +24,16 @@ Daily OHLCV bars for a ticker within an optional date window.
 | `limit` | integer | No | 5000 | Max bars (max 10000). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/prices?scenario_id=<id>&ticker=AAPL&interval=day&start_date=2026-01-02&end_date=2026-03-27" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.prices.get("AAPL", scenario_id="<id>", interval="day", start_date="2026-01-02", end_date="2026-03-27")
+```
+</CodeGroup>
 
 ```json
 {
@@ -66,10 +72,16 @@ The single bar visible as of a date, useful for point-in-time valuation.
 | `ticker` | string | Yes | Ticker symbol to query. |
 | `as_of` | date | Yes | Cutoff date. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/prices/snapshot?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.prices.snapshot("AAPL", scenario_id="<id>", as_of="2026-03-26")
+```
+</CodeGroup>
 
 ```json
 { "snapshot": { "ticker": "AAPL", "close": 191.2, "time": "2026-03-26", "...": "..." } }
@@ -92,10 +104,16 @@ A market-wide snapshot across many tickers as of a date.
 | `limit` | integer | No | 500 | Tickers (max 5000). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/prices/snapshot/market?scenario_id=<id>&as_of=2026-03-26" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.prices.market_snapshot(scenario_id="<id>", as_of="2026-03-26")
+```
+</CodeGroup>
 
 ## Discovery helpers
 

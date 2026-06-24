@@ -23,10 +23,16 @@ GET /financials/income-statements/as-reported
 GET /financials/income-statements/segments
 ```
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/financials/income-statements?scenario_id=<id>&ticker=AAPL&period=quarterly&limit=8" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.income_statements("AAPL", scenario_id="<id>", period="quarterly", limit=8)
+```
+</CodeGroup>
 
 ```json
 {
@@ -59,10 +65,16 @@ GET /financials/balance-sheets/as-reported
 GET /financials/balance-sheets/segments
 ```
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/financials/balance-sheets?scenario_id=<id>&ticker=AAPL&period=quarterly" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.balance_sheets("AAPL", scenario_id="<id>", period="quarterly")
+```
+</CodeGroup>
 
 ```json
 {
@@ -89,10 +101,16 @@ GET /financials/cash-flow-statements/as-reported
 GET /financials/cash-flow-statements/segments
 ```
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/financials/cash-flow-statements?scenario_id=<id>&ticker=AAPL&period=quarterly" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.cash_flow_statements("AAPL", scenario_id="<id>", period="quarterly")
+```
+</CodeGroup>
 
 ```json
 {
@@ -119,10 +137,16 @@ GET /financials/segments
 
 Returns all three statements per period in a single response.
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/financials?scenario_id=<id>&ticker=AAPL&period=quarterly&limit=4" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.all_statements("AAPL", scenario_id="<id>", period="quarterly", limit=4)
+```
+</CodeGroup>
 
 ```json
 {

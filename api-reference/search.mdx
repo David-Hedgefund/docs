@@ -13,10 +13,16 @@ GET /financials/search/screener/filters
 
 Returns the available filterable fields for the screener. Takes no parameters.
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/financials/search/screener/filters" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.screener_filters()
+```
+</CodeGroup>
 
 ```json
 { "filters": ["market_cap", "price_to_earnings_ratio", "gross_margin", "..."] }
@@ -38,7 +44,8 @@ Rank and filter companies by financial metrics. Send a JSON body.
 | `limit` | integer | No | 100 | Max results. |
 | `filters` | object | No | `{}` | Map of metric → comparator. Comparators: `gt`, `gte`, `lt`, `lte`, `eq`. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s -X POST "https://api.davidhf.com/financials/search/screener" \
   -H "X-API-KEY: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -51,6 +58,11 @@ curl -s -X POST "https://api.davidhf.com/financials/search/screener" \
     }
   }'
 ```
+
+```python Python
+dd.financials.screener({"gross_margin": {"gte": 0.4}}, scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 { "results": [ { "ticker": "AAPL", "market_cap": 2950000000000, "gross_margin": 0.452 } ] }
@@ -72,7 +84,8 @@ Extract specific statement line items across tickers, handy for building feature
 | `limit` | integer | No | 100 | Max rows. |
 | `line_items` | string[] | No | - | Line items to extract, e.g. `["revenue", "net_income"]`. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s -X POST "https://api.davidhf.com/financials/search/line-items" \
   -H "X-API-KEY: YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -83,6 +96,11 @@ curl -s -X POST "https://api.davidhf.com/financials/search/line-items" \
     "line_items": ["revenue", "net_income", "free_cash_flow"]
   }'
 ```
+
+```python Python
+dd.financials.line_items(["revenue", "net_income", "free_cash_flow"], ["AAPL", "MSFT"], scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 {

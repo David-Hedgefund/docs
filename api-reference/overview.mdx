@@ -5,6 +5,10 @@ description: "Base URL, authentication, shared parameters, and response conventi
 
 The David API is a REST API that returns JSON. Every endpoint is scoped to a [scenario](/concepts/scenarios) and reads like a conventional market-data API.
 
+<Tip>
+  Each example shows **cURL** and **Python**. The Python tab uses the [official SDK](/sdk/python) and assumes a configured client: `from david_data import DavidData; dd = DavidData()`.
+</Tip>
+
 ## Base URL
 
 ```text
@@ -17,19 +21,31 @@ All requests go to this host over HTTPS.
 
 Send your key in the `X-API-KEY` header on every request. See [Authentication](/authentication).
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/scenarios" \
   -H "X-API-KEY: your-api-key"
 ```
+
+```python Python
+dd.scenarios.list()
+```
+</CodeGroup>
 
 ## The `scenario_id` parameter
 
 Almost every data endpoint requires a `scenario_id` query parameter identifying the world to read from. David generates and curates the scenarios; obtain a `scenario_id` by [listing scenarios](/api-reference/scenarios#list-scenarios).
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/prices?scenario_id=<scenario_id>&ticker=AAPL" \
   -H "X-API-KEY: your-api-key"
 ```
+
+```python Python
+dd.prices.get("AAPL", scenario_id="<scenario_id>")
+```
+</CodeGroup>
 
 ## Response shape
 
@@ -58,12 +74,19 @@ See [Date semantics](/concepts/date-semantics) for how dates and visibility work
 
 List endpoints page with `limit` and `offset`. To walk a full result set, increase `offset` by `limit` until a short page returns:
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/companies?scenario_id=<id>&limit=100&offset=0" \
   -H "X-API-KEY: your-api-key"
 curl -s "https://api.davidhf.com/companies?scenario_id=<id>&limit=100&offset=100" \
   -H "X-API-KEY: your-api-key"
 ```
+
+```python Python
+dd.company.list(scenario_id="<id>", limit=100, offset=0)
+dd.company.list(scenario_id="<id>", limit=100, offset=100)
+```
+</CodeGroup>
 
 ## Rate limits & errors
 

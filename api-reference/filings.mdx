@@ -22,10 +22,16 @@ One row per synthetic filing/accession, with the item codes it contains and the 
 | `limit` | integer | No | 10 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/filings?scenario_id=<id>&ticker=AAPL&filing_type=10-Q" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.filings.list(scenario_id="<id>", ticker="AAPL", filing_type="10-Q")
+```
+</CodeGroup>
 
 ```json
 {
@@ -71,10 +77,16 @@ Item-level text, one row per item section, for agent reading and reconciliation 
 | `limit` | integer | No | 20 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/filings/items?scenario_id=<id>&ticker=AAPL&filing_type=10-Q&item=Item-2" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.filings.items(scenario_id="<id>", ticker="AAPL", filing_type="10-Q", item="Item-2")
+```
+</CodeGroup>
 
 ```json
 {
@@ -115,10 +127,16 @@ GET /filings/items/types
 
 Each takes only `scenario_id`.
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/filings/types?scenario_id=<id>" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.filings.types(scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 { "filing_types": ["10-Q", "8-K"] }

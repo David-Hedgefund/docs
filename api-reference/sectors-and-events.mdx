@@ -17,10 +17,16 @@ Sector metadata for the scenario: descriptions, regime, and factor exposures.
 | --- | --- | --- | --- |
 | `scenario_id` | string | Yes | The world to read from. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/metadata/sectors?scenario_id=<id>" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.metadata.sectors(scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 {
@@ -54,10 +60,16 @@ The public event sequence for the scenario, earnings, macro catalysts, and idios
 | `limit` | integer | No | 100 | Page size (max 500). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/events/timeline?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.events.timeline(scenario_id="<id>", ticker="AAPL", as_of="2026-03-26")
+```
+</CodeGroup>
 
 ```json
 {

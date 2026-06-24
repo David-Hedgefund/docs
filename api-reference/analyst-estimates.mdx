@@ -19,10 +19,16 @@ GET /analyst-estimates
 | `limit` | integer | No | 50 | Page size (max 200). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/analyst-estimates?scenario_id=<id>&ticker=AAPL&as_of=2026-03-27" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.analyst.estimates("AAPL", scenario_id="<id>", as_of="2026-03-27")
+```
+</CodeGroup>
 
 ```json
 {

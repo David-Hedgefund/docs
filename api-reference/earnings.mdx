@@ -20,10 +20,16 @@ Earnings results for a ticker (or across the scenario when `ticker` is omitted).
 | `limit` | integer | No | 4 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/earnings?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.earnings.list("AAPL", scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 {
@@ -62,10 +68,16 @@ Upcoming/known earnings dates for a ticker.
 | `limit` | integer | No | 20 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/earnings/calendar?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.earnings.calendar("AAPL", scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 {

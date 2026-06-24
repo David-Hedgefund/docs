@@ -21,10 +21,16 @@ Time series of metrics for a single ticker.
 | `limit` | integer | No | 4 | Page size (max 100). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/financial-metrics?scenario_id=<id>&ticker=AAPL&period=ttm&limit=4" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.metrics("AAPL", scenario_id="<id>", period="ttm", limit=4)
+```
+</CodeGroup>
 
 ```json
 {
@@ -63,10 +69,16 @@ A point-in-time metrics snapshot across one or many tickers, joined with the pri
 | `limit` | integer | No | 100 | Tickers (max 5000). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/financial-metrics/snapshot?scenario_id=<id>&as_of=2026-03-26&limit=50" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.financials.metrics_snapshot(scenario_id="<id>", as_of="2026-03-26", limit=50)
+```
+</CodeGroup>
 
 ```json
 { "financial_metrics": [ { "ticker": "AAPL", "price_to_earnings_ratio": 28.4, "market_cap": 2950000000000, "...": "..." } ] }

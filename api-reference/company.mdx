@@ -19,10 +19,16 @@ Returns facts for a single company by `ticker` or `cik`.
 | `ticker` | string | No | Symbol to look up. |
 | `cik` | string | No | CIK to look up (alternative to `ticker`). |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/company/facts?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.company.facts("AAPL", scenario_id="<id>")
+```
+</CodeGroup>
 
 ```json
 {
@@ -62,10 +68,16 @@ List or search companies in a scenario.
 | `limit` | integer | No | 100 | Page size (max 5000). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/companies?scenario_id=<id>&search=semiconductor&limit=25" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.company.list(scenario_id="<id>", search="semiconductor", limit=25)
+```
+</CodeGroup>
 
 ```json
 { "companies": [ { "ticker": "NVDA", "name": "NVIDIA Corp.", "sector": "Technology", "...": "..." } ] }
@@ -93,7 +105,13 @@ GET /company/facts/ciks
 
 Both take only `scenario_id`.
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/company/facts/tickers?scenario_id=<id>" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.company.tickers(scenario_id="<id>")
+```
+</CodeGroup>

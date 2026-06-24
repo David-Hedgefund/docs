@@ -22,10 +22,16 @@ GET /insider-trades
 | `limit` | integer | No | 10 | Page size (max 200). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/insider-trades?scenario_id=<id>&ticker=AAPL&transaction_type=sell&filing_date_gte=2026-01-01" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.insiders.trades(scenario_id="<id>", ticker="AAPL", transaction_type="sell", filing_date_gte="2026-01-01")
+```
+</CodeGroup>
 
 ```json
 {
@@ -62,7 +68,13 @@ The simpler list form: same row shape, fewer filters.
 | `limit` | integer | No | 50 | Page size (max 200). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/insider-transactions?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.insiders.transactions(scenario_id="<id>", ticker="AAPL")
+```
+</CodeGroup>
