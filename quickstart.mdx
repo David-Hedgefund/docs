@@ -37,10 +37,16 @@ This guide takes you from zero to your first David response. You'll authenticate
   <Step title="Find a scenario">
     David ships with a library of ready-made scenarios. List them to grab a `scenario_id`:
 
-    ```bash
+    <CodeGroup>
+    ```bash cURL
     curl -s "https://api.davidhf.com/scenarios?limit=3" \
       -H "X-API-KEY: YOUR_API_KEY"
     ```
+
+    ```python Python
+    dd.scenarios.list(limit=3)
+    ```
+    </CodeGroup>
 
     ```json
     {
@@ -63,10 +69,16 @@ This guide takes you from zero to your first David response. You'll authenticate
   <Step title="See what's inside">
     Inspect a scenario to see its date range and available tickers:
 
-    ```bash
+    <CodeGroup>
+    ```bash cURL
     curl -s "https://api.davidhf.com/scenarios/6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0" \
       -H "X-API-KEY: YOUR_API_KEY"
     ```
+
+    ```python Python
+    dd.scenarios.get("6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0")
+    ```
+    </CodeGroup>
 
     The response includes `available_tickers` (e.g. `AAPL`, `MSFT`, `NVDA`) and a `public_summary` describing the market world.
   </Step>
@@ -74,10 +86,16 @@ This guide takes you from zero to your first David response. You'll authenticate
   <Step title="Pull prices">
     Query daily OHLCV for a ticker in that scenario:
 
-    ```bash
+    <CodeGroup>
+    ```bash cURL
     curl -s "https://api.davidhf.com/prices?scenario_id=6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0&ticker=AAPL&interval=day&limit=5" \
       -H "X-API-KEY: YOUR_API_KEY"
     ```
+
+    ```python Python
+    dd.prices.get("AAPL", scenario_id="6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0", interval="day", limit=5)
+    ```
+    </CodeGroup>
 
     ```json
     {
@@ -92,7 +110,8 @@ This guide takes you from zero to your first David response. You'll authenticate
   <Step title="Pull fundamentals and news">
     Same `scenario_id`, different endpoint:
 
-    ```bash
+    <CodeGroup>
+    ```bash cURL
     # Quarterly income statements
     curl -s "https://api.davidhf.com/financials/income-statements?scenario_id=6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0&ticker=AAPL&period=quarterly&limit=4" \
       -H "X-API-KEY: YOUR_API_KEY"
@@ -101,6 +120,15 @@ This guide takes you from zero to your first David response. You'll authenticate
     curl -s "https://api.davidhf.com/news?scenario_id=6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0&ticker=AAPL&as_of=2026-03-20" \
       -H "X-API-KEY: YOUR_API_KEY"
     ```
+
+    ```python Python
+    # Quarterly income statements
+    dd.financials.income_statements("AAPL", scenario_id="6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0", period="quarterly", limit=4)
+
+    # Latest news visible as of a date
+    dd.news.list(ticker="AAPL", scenario_id="6724c7d1-1b34-5da4-bc69-5ab0ef99c3c0", as_of="2026-03-20")
+    ```
+    </CodeGroup>
   </Step>
 </Steps>
 
@@ -108,11 +136,18 @@ This guide takes you from zero to your first David response. You'll authenticate
 
 David curates the full scenario library, you don't generate worlds, you choose from them. Filter the library to assemble the sets you need:
 
-```bash
+<CodeGroup>
+```bash cURL
 # Future-branch scenarios that passed validation
 curl -s "https://api.davidhf.com/scenarios?path_mode=future_branch&healthy_only=true&limit=10" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+# Future-branch scenarios that passed validation
+dd.scenarios.list(path_mode="future_branch", healthy_only=True, limit=10)
+```
+</CodeGroup>
 
 Need a world with characteristics the library doesn't cover? Reach out at [investors@davidhf.com](mailto:investors@davidhf.com) and we'll generate it.
 

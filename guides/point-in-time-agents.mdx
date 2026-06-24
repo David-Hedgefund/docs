@@ -11,9 +11,15 @@ Every artifact in David carries a release date and a `visible_from` timestamp. W
 
 ## 1. Choose a scenario and horizon
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/scenarios/<id>" -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.scenarios.get("<id>")
+```
+</CodeGroup>
 
 This gives you the scenario's date range, `available_tickers`, and `public_summary` (including `path_mode` and `date_semantics`) so you know the clock you're stepping through.
 
@@ -21,7 +27,8 @@ This gives you the scenario's date range, `available_tickers`, and `public_summa
 
 At each `as_of` date, pull the information set:
 
-```bash
+<CodeGroup>
+```bash cURL
 # Market state
 curl -s "https://api.davidhf.com/prices/snapshot/market?scenario_id=<id>&as_of=2026-03-26" -H "X-API-KEY: YOUR_API_KEY"
 
@@ -34,6 +41,14 @@ curl -s "https://api.davidhf.com/events/timeline?scenario_id=<id>&as_of=2026-03-
 # Consensus as of now
 curl -s "https://api.davidhf.com/analyst-estimates?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.prices.market_snapshot(scenario_id="<id>", as_of="2026-03-26")
+dd.news.list(scenario_id="<id>", as_of="2026-03-26", limit=50)
+dd.events.timeline(scenario_id="<id>", as_of="2026-03-26")
+dd.analyst.estimates("AAPL", scenario_id="<id>", as_of="2026-03-26")
+```
+</CodeGroup>
 
 Because each call is bounded by `as_of`, nothing from after that date can leak into the agent's reasoning.
 

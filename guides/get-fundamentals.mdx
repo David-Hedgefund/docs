@@ -9,23 +9,37 @@ This guide walks through fetching a company's fundamentals, financial statements
 
 List scenarios and grab an `id`, then check which tickers it contains:
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/scenarios?limit=1" -H "X-API-KEY: YOUR_API_KEY"
 curl -s "https://api.davidhf.com/company/facts/tickers?scenario_id=<id>" -H "X-API-KEY: YOUR_API_KEY"
 ```
 
+```python Python
+dd.scenarios.list(limit=1)
+dd.company.tickers(scenario_id="<id>")
+```
+</CodeGroup>
+
 ## 2. Get company facts
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/company/facts?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.company.facts("AAPL", scenario_id="<id>")
+```
+</CodeGroup>
 
 Confirm `category` is `Operating Company`, non-operating instruments (ETFs, warrants) won't have statements.
 
 ## 3. Pull the statements
 
-```bash
+<CodeGroup>
+```bash cURL
 # Income statement, last 8 quarters
 curl -s "https://api.davidhf.com/financials/income-statements?scenario_id=<id>&ticker=AAPL&period=quarterly&limit=8" \
   -H "X-API-KEY: YOUR_API_KEY"
@@ -35,11 +49,18 @@ curl -s "https://api.davidhf.com/financials?scenario_id=<id>&ticker=AAPL&period=
   -H "X-API-KEY: YOUR_API_KEY"
 ```
 
+```python Python
+dd.financials.income_statements("AAPL", scenario_id="<id>", period="quarterly", limit=8)
+dd.financials.all_statements("AAPL", scenario_id="<id>", period="quarterly", limit=4)
+```
+</CodeGroup>
+
 Use `period=annual` or `period=ttm` for other views, and `report_period_gte` / `report_period_lte` to bound the fiscal range.
 
 ## 4. Add metrics and earnings
 
-```bash
+<CodeGroup>
+```bash cURL
 # Valuation, margin, and return ratios
 curl -s "https://api.davidhf.com/financial-metrics?scenario_id=<id>&ticker=AAPL&period=ttm&limit=4" \
   -H "X-API-KEY: YOUR_API_KEY"
@@ -49,15 +70,27 @@ curl -s "https://api.davidhf.com/earnings?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
 
+```python Python
+dd.financials.metrics("AAPL", scenario_id="<id>", period="ttm", limit=4)
+dd.earnings.list("AAPL", scenario_id="<id>")
+```
+</CodeGroup>
+
 ## 5. Screen across companies
 
 To find companies by metric rather than pulling one at a time, use the [screener](/api-reference/search):
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s -X POST "https://api.davidhf.com/financials/search/screener" \
   -H "X-API-KEY: YOUR_API_KEY" -H "Content-Type: application/json" \
   -d '{"scenario_id":"<id>","period":"ttm","filters":{"gross_margin":{"gte":0.4}}}'
 ```
+
+```python Python
+dd.financials.screener({"gross_margin": {"gte": 0.4}}, scenario_id="<id>")
+```
+</CodeGroup>
 
 <Tip>
   Statements satisfy accounting identities by construction. If you're building a checker, compare your computed totals against the scenario's [validation report](/api-reference/scenarios#validation-report).

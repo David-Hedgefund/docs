@@ -9,10 +9,16 @@ This guide covers the three ways to read prices from a scenario: a historical wi
 
 Pull daily bars for a ticker, optionally bounded by a date window:
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/prices?scenario_id=<id>&ticker=AAPL&interval=day&start_date=2026-01-02&end_date=2026-03-27" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.prices.get("AAPL", scenario_id="<id>", interval="day", start_date="2026-01-02", end_date="2026-03-27")
+```
+</CodeGroup>
 
 Only `interval=day` is supported. Page large ranges with `limit` (max 10000) and `offset`.
 
@@ -20,10 +26,16 @@ Only `interval=day` is supported. Page large ranges with `limit` (max 10000) and
 
 To see *why* a bar moved, market, sector, idiosyncratic, and event contributions, add `include_components=true`:
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/prices?scenario_id=<id>&ticker=AAPL&include_components=true&limit=5" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.prices.get("AAPL", scenario_id="<id>", include_components=True, limit=5)
+```
+</CodeGroup>
 
 This is useful for attribution and for training models that should separate systematic from idiosyncratic moves.
 
@@ -31,19 +43,31 @@ This is useful for attribution and for training models that should separate syst
 
 The single bar visible as of a date, exactly what a participant would have seen at the close:
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/prices/snapshot?scenario_id=<id>&ticker=AAPL&as_of=2026-03-26" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.prices.snapshot("AAPL", scenario_id="<id>", as_of="2026-03-26")
+```
+</CodeGroup>
 
 ## Market-wide snapshot
 
 A cross-section of the whole scenario as of a date, good for building daily universe states:
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/prices/snapshot/market?scenario_id=<id>&as_of=2026-03-26&limit=500" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.prices.market_snapshot(scenario_id="<id>", as_of="2026-03-26", limit=500)
+```
+</CodeGroup>
 
 <Tip>
   For a backtest, step the `as_of` date forward day by day and pull the market snapshot at each step. David never returns future bars, so the loop is leakage-free by construction. See [Point-in-time agents](/guides/point-in-time-agents).

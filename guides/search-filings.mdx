@@ -7,7 +7,8 @@ David generates SEC-style filings (10-Q, 8-K) with item sections that link back 
 
 ## 1. Discover what's available
 
-```bash
+<CodeGroup>
+```bash cURL
 # Tickers with filings
 curl -s "https://api.davidhf.com/filings/tickers?scenario_id=<id>" -H "X-API-KEY: YOUR_API_KEY"
 
@@ -18,14 +19,27 @@ curl -s "https://api.davidhf.com/filings/types?scenario_id=<id>" -H "X-API-KEY: 
 curl -s "https://api.davidhf.com/filings/items/types?scenario_id=<id>" -H "X-API-KEY: YOUR_API_KEY"
 ```
 
+```python Python
+dd.filings.tickers(scenario_id="<id>")
+dd.filings.types(scenario_id="<id>")
+dd.filings.item_types(scenario_id="<id>")
+```
+</CodeGroup>
+
 ## 2. List filings
 
 One row per accession, with the item codes it contains:
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/filings?scenario_id=<id>&ticker=AAPL&filing_type=10-Q" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.filings.list(scenario_id="<id>", ticker="AAPL", filing_type="10-Q")
+```
+</CodeGroup>
 
 Each row carries `accession_number`, `cik`, `report_period`, `items`, `source_event_ids`, and the assembled `text`.
 
@@ -33,10 +47,16 @@ Each row carries `accession_number`, `cik`, `report_period`, `items`, `source_ev
 
 To get individual item sections, for example the MD&A (`Item-2`), use the items endpoint:
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/filings/items?scenario_id=<id>&ticker=AAPL&filing_type=10-Q&item=Item-2" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.filings.items(scenario_id="<id>", ticker="AAPL", filing_type="10-Q", item="Item-2")
+```
+</CodeGroup>
 
 You can also filter by `year` and `quarter`.
 
@@ -44,10 +64,16 @@ You can also filter by `year` and `quarter`.
 
 Filing text repeats the numbers in the structured records, the same revenue and EPS that appear in [`/earnings`](/api-reference/earnings) and [`/financials`](/api-reference/financial-statements). Each item also carries a `source_event_id`, so you can trace a disclosure to the event that triggered it via [`/events/timeline`](/api-reference/sectors-and-events#event-timeline).
 
-```bash
+<CodeGroup>
+```bash cURL
 curl -s "https://api.davidhf.com/events/timeline?scenario_id=<id>&ticker=AAPL" \
   -H "X-API-KEY: YOUR_API_KEY"
 ```
+
+```python Python
+dd.events.timeline(scenario_id="<id>", ticker="AAPL")
+```
+</CodeGroup>
 
 <Info>
   Only operating companies file. ETFs and other non-operating instruments return no issuer filings. See [Ticker universe](/concepts/ticker-universe).
