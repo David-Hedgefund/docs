@@ -1,0 +1,134 @@
+---
+title: "Python SDK"
+description: "The official david-data Python client."
+---
+
+`david-data` is the official Python client for the David API. It wraps every endpoint, handles auth and retries, and unwraps responses into plain Python objects.
+
+## Install
+
+```bash
+pip install david-data            # core
+pip install david-data[pandas]    # + DataFrame helpers
+```
+
+Requires Python 3.9+.
+
+## Authenticate
+
+Pass your key directly, or set the `DAVID_DATA_API_KEY` environment variable and omit it.
+
+```python
+from david_data import DavidData
+
+dd = DavidData(api_key="YOUR_API_KEY")
+# or: export DAVID_DATA_API_KEY=YOUR_API_KEY  ->  dd = DavidData()
+```
+
+## Quickstart
+
+Every data call is keyed by a `scenario_id`. Pick a scenario from the library, then pull from it.
+
+```python
+# 1. Pick a scenario
+scenario = dd.scenarios.list(limit=1)[0]
+sid = scenario["id"]
+
+# 2. Pull data from it
+bars   = dd.prices.get("AAPL", scenario_id=sid, start_date="2024-01-01")
+income = dd.financials.income_statements("AAPL", scenario_id=sid, period="quarterly", limit=5)
+news   = dd.news.list(ticker="AAPL", scenario_id=sid, limit=10)
+
+print(bars[0])   # {'ticker': 'AAPL', 'open': ..., 'close': ..., 'volume': ...}
+```
+
+Methods return parsed JSON with the response envelope removed: a `list` of records for collections, a `dict` for single objects.
+
+## Set a default scenario
+
+Repeating `scenario_id=` everywhere gets old. Set it once on the client and omit it; override per call when needed.
+
+```python
+dd = DavidData(scenario_id=sid)
+dd.prices.get("AAPL")                          # uses the default
+dd.prices.get("AAPL", scenario_id="other")     # override
+```
+
+Calling a data endpoint with no `scenario_id` (and no default) raises a clear error instead of guessing.
+
+## What you can pull
+
+| Resource | Methods |
+| --- | --- |
+| `dd.prices` | `get`, `snapshot`, `market_snapshot`, `tickers` |
+| `dd.financials` | `income_statements`, `balance_sheets`, `cash_flow_statements`, `all_statements`, `metrics`, `segments`, `as_reported`, `kpi_metrics`, `screener`, `line_items` |
+| `dd.company` | `list`, `facts`, `tickers`, `ciks` |
+| `dd.news` / `dd.filings` | `list`, `get` / `list`, `items`, `types` |
+| `dd.earnings` / `dd.analyst` | `list`, `calendar` / `estimates`, `notes` |
+| `dd.insiders` / `dd.institutional` | `trades`, `transactions` / `holdings`, `investors` |
+| `dd.index_funds` / `dd.corporate_actions` | `list` |
+| `dd.macro` | `series`, `interest_rates`, `banks` |
+| `dd.events` | `timeline` |
+| `dd.scenarios` | `list`, `get`, `validation` |
+
+Dates accept ISO strings (`"2024-01-01"`) or `datetime.date` objects.
+
+## DataFrames
+
+Convert any result to a pandas DataFrame with `to_df` (needs the `[pandas]` extra):
+
+```python
+from david_data import to_df
+
+df = to_df(dd.prices.get("AAPL", scenario_id=sid, start_date="2024-01-01"))
+```
+
+## Errors & retries
+
+Every exception subclasses `DavidDataError`. The client automatically retries `429` and transient `5xx` responses with exponential backoff (honoring `Retry-After`); tune with `max_retries=`.
+
+```python
+from david_data import DavidData, NotFoundError, RateLimitError
+
+dd = DavidData()
+try:
+    dd.prices.get("AAPL", scenario_id=sid)
+except RateLimitError as e:
+    print("slow down; retry after", e.retry_after)
+except NotFoundError:
+    print("no such ticker or scenario")
+```
+
+| Exception | Raised on |
+| --- | --- |
+| `AuthenticationError` | `401` invalid or missing key |
+| `PermissionDeniedError` | `403` not allowed |
+| `NotFoundError` | `404` unknown scenario, ticker, or id |
+| `BadRequestError` | `400` invalid parameters |
+| `RateLimitError` | `429` rate limit exceeded (`.retry_after`) |
+| `ServerError` | `5xx` server error |
+| `APIConnectionError` / `APITimeoutError` | network failure / timeout |
+
+## Escape hatch
+
+Any endpoint not yet wrapped is reachable directly:
+
+```python
+dd.get("/metadata/scenario-themes")
+dd.post("/financials/search/screener", json={"scenario_id": sid, "filters": {"gross_margin": {"gte": 0.4}}})
+```
+
+## Client options
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `api_key` | `DAVID_DATA_API_KEY` | Your API key. |
+| `scenario_id` | none | Default scenario for every data call. |
+| `base_url` | `https://api.davidhf.com` | API root (or `DAVID_DATA_BASE_URL`). |
+| `timeout` | `30.0` | Per-request timeout in seconds. |
+| `max_retries` | `3` | Retries for `429` and transient `5xx`. |
+
+```python
+with DavidData() as dd:   # closes the connection pool on exit
+    dd.prices.get("AAPL", scenario_id=sid)
+```
