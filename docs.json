@@ -62,7 +62,8 @@
           {
             "group": "Scenarios",
             "pages": [
-              "api-reference/scenarios"
+              "api-reference/scenarios",
+              "api-reference/metadata"
             ]
           },
           {
@@ -115,12 +116,6 @@
               "api-reference/corporate-actions",
               "api-reference/sectors-and-events"
             ]
-          },
-          {
-            "group": "Platform",
-            "pages": [
-              "api-reference/metadata"
-            ]
           }
         ]
       }
@@ -134,7 +129,7 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:investors@davidhf.com"
+        "href": "mailto:founders@davidhf.com"
       }
     ],
     "primary": {

@@ -77,12 +77,12 @@ Because the world is derived from a single hidden truth, the data ties together:
 
 Every scenario ships a [validation report](/api-reference/scenarios#validation-report) that checks these properties.
 
-## Calibration
+## Realism
 
-David's generator is tuned against **stylized facts** of real markets (return distributions, volatility clustering, drawdown frequency, volume/reaction coupling, tail behavior, and cross-sector correlation) measured from market panels. The [`/metadata/empirical-calibration`](/api-reference/metadata#empirical-calibration) endpoint reports the current calibration manifest and gate margins.
+David's generator is tuned so the synthetic data reproduces the **stylized facts** of real markets: return distributions, volatility clustering, drawdown frequency, volume/reaction coupling, tail behavior, and cross-sector correlation.
 
 <Info>
-  Calibration means the synthetic data *resembles* real markets statistically. It does not mean David copies real time series. David is a research and evaluation tool, not a licensed feed of real market data.
+  This means the synthetic data *resembles* real markets statistically. It does not mean David copies real time series. David is a research and evaluation tool, not a licensed feed of real market data.
 </Info>
 
 ## Next steps

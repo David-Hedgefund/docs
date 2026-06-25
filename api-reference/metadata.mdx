@@ -1,39 +1,9 @@
 ---
-title: "Metadata"
-description: "Coverage map, scenario themes, calibration, and quality audits."
+title: "Scenario themes"
+description: "Browse the catalog of market themes scenarios are built from."
 ---
 
-Metadata endpoints describe the platform itself: what's covered, how it scales, which themes exist, and how the synthetic data is calibrated and audited. These endpoints are scenario-independent unless noted.
-
-## Financial Datasets coverage
-
-```http
-GET /metadata/financial-datasets-coverage
-```
-
-The live map of David's endpoint surface against the Financial Datasets API surface, including which operations are native vs. derived compatibility views.
-
-<CodeGroup>
-```bash cURL
-curl -s "https://api.davidhf.com/metadata/financial-datasets-coverage" \
-  -H "X-API-KEY: YOUR_API_KEY"
-```
-
-```python Python
-dd.metadata.financial_datasets_coverage()
-```
-</CodeGroup>
-
-```json
-{
-  "financial_datasets_coverage": {
-    "implemented_operation_count": 49,
-    "coverage_ratio": 1.0,
-    "operations": ["..."],
-    "important_note": "The paths are compatible synthetic equivalents and include derived views ..."
-  }
-}
-```
+Every scenario is built from a **theme**: a macro regime, sector mix, catalyst, and the analytical task it poses. This endpoint returns the full catalog so you can pick scenarios by theme.
 
 ## Scenario themes
 
@@ -41,7 +11,7 @@ dd.metadata.financial_datasets_coverage()
 GET /metadata/scenario-themes
 ```
 
-The full theme catalog: id, title, description, macro regime, event template, sectors, market mechanics, and the agent task each theme poses.
+The full theme catalog: id, title, description, macro regime, sectors, market mechanics, and the agent task each theme poses. Takes no parameters.
 
 <CodeGroup>
 ```bash cURL
@@ -62,7 +32,6 @@ dd.metadata.scenario_themes()
       "title": "War-driven energy shock",
       "description": "A regional war disrupts energy supply ...",
       "macro_regime": "inflation_shock",
-      "event_template": "...",
       "sectors": ["Energy", "Industrials", "..."],
       "market_mechanics": ["energy and materials gain on commodity pricing power", "..."],
       "agent_task": "Separate durable commodity winners from temporary spikes."
@@ -70,68 +39,3 @@ dd.metadata.scenario_themes()
   ]
 }
 ```
-
-## Institutional readiness
-
-```http
-GET /metadata/institutional-readiness
-```
-
-A readiness report describing the calibration and quality gates the data is evaluated against.
-
-<CodeGroup>
-```bash cURL
-curl -s "https://api.davidhf.com/metadata/institutional-readiness" \
-  -H "X-API-KEY: YOUR_API_KEY"
-```
-
-```python Python
-dd.metadata.institutional_readiness()
-```
-</CodeGroup>
-
-## Empirical calibration
-
-```http
-GET /metadata/empirical-calibration
-```
-
-The calibration manifest: stylized-fact gates (volatility, kurtosis, clustering, drawdown, tails, coverage) and current margins against measured market panels.
-
-| Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
-| `panel_path` | string | No | Optional path to a calibration panel to evaluate against. |
-
-<CodeGroup>
-```bash cURL
-curl -s "https://api.davidhf.com/metadata/empirical-calibration" \
-  -H "X-API-KEY: YOUR_API_KEY"
-```
-
-```python Python
-dd.metadata.empirical_calibration()
-```
-</CodeGroup>
-
-## Synthetic-data audit
-
-```http
-GET /metadata/synthetic-data-audit
-```
-
-A library-wide self-audit: scenario uniqueness, intentional repeated-theme variants, path-mode and horizon diversity, and calibration-gate margins across the library.
-
-<CodeGroup>
-```bash cURL
-curl -s "https://api.davidhf.com/metadata/synthetic-data-audit" \
-  -H "X-API-KEY: YOUR_API_KEY"
-```
-
-```python Python
-dd.metadata.synthetic_data_audit()
-```
-</CodeGroup>
-
-<Info>
-  Per-scenario consistency lives on the [Scenarios](/api-reference/scenarios) endpoints via [`/validation`](/api-reference/scenarios#validation-report). The endpoints here audit the platform and library as a whole.
-</Info>

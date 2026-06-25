@@ -1,46 +1,9 @@
 ---
-title: "Sectors & events"
-description: "Sector metadata and the scenario event timeline."
+title: "Events"
+description: "The scenario's public event timeline."
 ---
 
-These endpoints describe the structure of the scenario: its sector definitions and the public event timeline that drives prices, news, and filings.
-
-## Sectors
-
-```http
-GET /metadata/sectors
-```
-
-Sector metadata for the scenario: descriptions, regime, and factor exposures.
-
-| Parameter | Type | Required | Description |
-| --- | --- | --- | --- |
-| `scenario_id` | string | Yes | The world to read from. |
-
-<CodeGroup>
-```bash cURL
-curl -s "https://api.davidhf.com/metadata/sectors?scenario_id=<id>" \
-  -H "X-API-KEY: YOUR_API_KEY"
-```
-
-```python Python
-dd.metadata.sectors(scenario_id="<id>")
-```
-</CodeGroup>
-
-```json
-{
-  "sectors": [
-    {
-      "sector": "Technology",
-      "industry": "Software",
-      "description": "...",
-      "regime": "inflation_shock",
-      "factors": { "rate_sensitivity": -0.4, "...": "..." }
-    }
-  ]
-}
-```
+The event timeline is the public sequence of events that drives prices, news, and filings within a scenario.
 
 ## Event timeline
 
