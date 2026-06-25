@@ -62,8 +62,7 @@
           {
             "group": "Scenarios",
             "pages": [
-              "api-reference/scenarios",
-              "api-reference/metadata"
+              "api-reference/scenarios"
             ]
           },
           {

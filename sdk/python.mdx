@@ -114,7 +114,7 @@ except NotFoundError:
 Any endpoint not yet wrapped is reachable directly:
 
 ```python
-dd.get("/metadata/scenario-themes")
+dd.get("/health")
 dd.post("/financials/search/screener", json={"scenario_id": sid, "filters": {"gross_margin": {"gte": 0.4}}})
 ```
 
