@@ -5,7 +5,7 @@
 - This is the documentation site for **David**, a synthetic financial data API for building, training, and evaluating financial AI agents.
 - The site is built on [Mintlify](https://mintlify.com). Pages are MDX files with YAML frontmatter.
 - Configuration lives in `docs.json` (branding, theme, navigation tabs and groups).
-- Content is modeled on the structure of the Financial Datasets documentation and describes the SynthFin API that powers David's synthetic data.
+- Content documents the David API that powers David's synthetic data.
 
 ## Terminology
 

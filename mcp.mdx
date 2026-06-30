@@ -1,0 +1,122 @@
+---
+title: "MCP server"
+description: "Pull David Data scenarios straight into your agent's context over the Model Context Protocol."
+---
+
+David ships an [MCP](https://modelcontextprotocol.io) server so agents in **Claude Desktop, Claude Code, Cursor**, or any MCP host can query synthetic market worlds directly — no glue code. It is a thin client that runs on your machine and calls the hosted David API over the network, injecting your `X-API-KEY`. Because it goes through the same API, it inherits the same auth, plan/quota, point-in-time visibility, and response caching.
+
+It exposes a **small, curated set of agent-shaped tools** rather than mirroring every endpoint — so the model picks the right tool and responses stay inside its context budget. Heavy payloads (filing bodies, press releases, per-row metadata) are slimmed by default, with `full` / `full_text` flags to opt back in.
+
+## Install
+
+The server is a small Python client. Install it, then point your MCP host at it.
+
+```bash
+uvx david-data-mcp        # run without installing (recommended)
+# or
+pipx install david-data-mcp
+```
+
+It reads three environment variables:
+
+| Variable | Default | Description |
+| --- | --- | --- |
+| `DAVID_DATA_API_URL` | `http://localhost:8000` | The David API root. Use `https://api.davidhf.com`. |
+| `DAVID_DATA_API_KEY` | - | Your API key (sent as `X-API-KEY`). Same key the [SDK](/sdk/python) uses. |
+| `DAVID_DATA_MCP_TIMEOUT` | `30` | Per-request timeout in seconds. |
+
+## Connect a client
+
+<CodeGroup>
+```json Claude Desktop / Cursor
+{
+  "mcpServers": {
+    "david-data": {
+      "command": "david-data-mcp",
+      "env": {
+        "DAVID_DATA_API_URL": "https://api.davidhf.com",
+        "DAVID_DATA_API_KEY": "YOUR_API_KEY"
+      }
+    }
+  }
+}
+```
+
+```bash Claude Code
+claude mcp add david-data \
+  --env DAVID_DATA_API_URL=https://api.davidhf.com \
+  --env DAVID_DATA_API_KEY=YOUR_API_KEY \
+  -- david-data-mcp
+```
+</CodeGroup>
+
+Add the `mcpServers` block to your client's config file (Claude Desktop: `claude_desktop_config.json`) and restart it.
+
+## Smoke test
+
+Once connected, ask your agent something that chains a few tools:
+
+> *"Use the david-data tools to find a 2008-style credit-crisis scenario, then show the companies with the worst price drawdowns."*
+
+That exercises `find_scenarios` → `get_companies` → `get_price_stats` end to end.
+
+## Tools
+
+Every data tool takes a `scenario_id`. Start with `find_scenarios` to get one, then pass it to the rest. Date arguments are ISO strings (`"2026-03-20"`); `as_of` enforces [point-in-time visibility](/concepts/date-semantics) so future data never leaks into a backtest.
+
+### Discovery
+
+| Tool | What it does |
+| --- | --- |
+| `find_scenarios` | Browse the scenario library. Returns a compact summary per world (id, theme, dates, difficulty, affected sectors). Filter by `healthy_only`, `min_ticker_count`, `path_mode`. |
+| `get_scenario` | Detail for one scenario: tickers, market mechanics, macro-regime parameters. |
+| `list_scenario_themes` | The theme archetypes (war shock, AI mania, credit crunch, …) used to build the library. |
+
+### Market data
+
+| Tool | What it does |
+| --- | --- |
+| `get_prices` | Daily OHLCV for a ticker. Keep `limit` modest — bars return into context. Page with `start_date` / `end_date`. |
+| `get_price_stats` | Path metrics computed server-side — peak/trough, max drawdown (with dates), total return, annualized vol — so you don't page raw bars. Omit `tickers` to cover the whole panel (capped at 50). |
+| `get_macro` | Macro tape: inflation expectations, credit spreads, volatility, yields, central-bank rates. Constant regime fields are hoisted into one `regime_metadata` block. |
+
+### Fundamentals
+
+| Tool | What it does |
+| --- | --- |
+| `get_companies` | List companies with classification (ticker, name, sector, industry, exchange). `search` matches name/ticker. |
+| `get_financials` | Income / balance / cash-flow statements (`statement=income\|balance\|cash-flow`, `period=quarterly\|annual`). Accounting identities hold by construction. |
+| `screen_companies` | Screen by financial metrics, e.g. `{"market_cap": {"gte": 1e10}, "net_margin": {"gte": 0.1}}`. Operators: `gte`, `lte`, `gt`, `lt`, `eq`. |
+| `get_screener_filters` | The filter keys and operators `screen_companies` accepts. |
+| `get_earnings` | Earnings releases: actual revenue/EPS, surprise vs. consensus, press-release narrative. `full_text=true` for the complete prose. |
+| `get_guidance` | Management KPI/financial guidance (point/low/high, direction vs. prior, source text). |
+| `get_estimates` | Sell-side estimates: per-firm rating, target price, metric estimates, revisions. `full=true` keeps per-row metadata. |
+
+### Disclosures
+
+| Tool | What it does |
+| --- | --- |
+| `get_news` | Company and market news, grounded in the scenario's structured records. `full=true` keeps the duplicated `structured` block. |
+| `get_filings` | SEC-style filings (10-K/10-Q/8-K) grouped by filing with item sections. Sections are previewed by default; `full_text=true` pulls complete bodies. |
+| `get_insider_trades` | Form 4-style transactions: who, role, buy/sell, shares, price, value. |
+
+### Ownership & corporate actions
+
+| Tool | What it does |
+| --- | --- |
+| `get_institutional_holdings` | 13F-style holdings: manager, shares, market value, portfolio weight, QoQ share change. `full=true` keeps the `filing_text` prose. |
+| `get_corporate_actions` | Splits, dividends, and similar events with their announcement/ex/record/payable dates. |
+
+### Quality
+
+| Tool | What it does |
+| --- | --- |
+| `get_validation` | Validation report for a scenario — accounting checks, OHLC invariants, price/event coherence — to confirm it's trustworthy before relying on it. `full=true` returns the complete report. |
+
+<Info>
+  Most read tools accept `as_of` to return only what was public by that date. Use it for point-in-time agent backtests so the agent's information set never includes the future. See [Point-in-time agents](/guides/point-in-time-agents).
+</Info>
+
+## REST instead?
+
+The MCP server is for putting data in an agent's hands interactively. For programmatic access from your own code, use the [Python SDK](/sdk/python) or call the [REST API](/api-reference/overview) directly — same data, same auth.

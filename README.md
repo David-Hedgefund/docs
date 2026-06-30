@@ -12,7 +12,7 @@ The documentation site for **David** — synthetic financial data API for buildi
 - `api-reference/` — one page per endpoint group, documenting every endpoint.
 - `logo/`, `favicon.svg` — brand assets.
 
-Pages are MDX files with YAML frontmatter. Content is modeled on the structure of the Financial Datasets documentation and sourced from the SynthFin API (the engine behind David's synthetic data).
+Pages are MDX files with YAML frontmatter. Content documents the David API (the engine behind David's synthetic data).
 
 ## Development
 

@@ -11,7 +11,7 @@ News articles and analyst notes are *grounded artifacts*: David generates them f
 GET /news
 ```
 
-Returns both company news (`news_article`) and market news (`market_news_article`).
+Returns company news (`news_article`) and market news (`market_news_article`). With no `ticker`, both are returned. With a `ticker`, only that company's news is returned by default — set `include_market=true` to fold scenario-level market headlines into the same call.
 
 | Parameter | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
@@ -19,8 +19,9 @@ Returns both company news (`news_article`) and market news (`market_news_article
 | `ticker` | string | No | all | Restrict to one ticker. |
 | `as_of` | date | No | - | Point-in-time cutoff, only articles visible on or before this date. |
 | `start_date` / `end_date` | date | No | - | Inclusive window. |
-| `market_only` | boolean | No | false | Return only market/macro news (no per-company articles). |
-| `limit` | integer | No | 10 | Page size (max 100). |
+| `market_only` | boolean | No | false | Return only market/macro news (no per-company articles). Overrides `ticker`. |
+| `include_market` | boolean | No | false | When a `ticker` is set, also include scenario-level market news. No effect without a `ticker` (market news is already included). |
+| `limit` | integer | No | 100 | Page size (max 500). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
 <CodeGroup>
@@ -104,7 +105,7 @@ Full-text sell-side notes (`analyst_note`), including the body text.
 | `ticker` | string | No | all | Restrict to one ticker. |
 | `as_of` | date | No | - | Point-in-time cutoff. |
 | `start_date` / `end_date` | date | No | - | Inclusive window. |
-| `limit` | integer | No | 10 | Page size (max 100). |
+| `limit` | integer | No | 10 | Page size (max 500). |
 | `offset` | integer | No | 0 | Pagination offset. |
 
 <CodeGroup>
